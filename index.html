@@ -3,259 +3,346 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexão Cuidado - Login Google</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Conexão Cuidado - App Completo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #e67e22; --google: #db4437; --light: #ecf0f1; --dark: #2c3e50; --danger: #e74c3c; }
+        :root {
+            --primary: #2c3e50;
+            --secondary: #27ae60;
+            --accent: #e67e22;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --danger: #dc3545;
+            --google-btn: #ffffff;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
         
-        /* Layout */
-        header { background: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 1.5rem; }
-        nav button { background: none; border: none; color: white; cursor: pointer; margin-left: 15px; font-size: 1rem; }
-        nav button:hover { text-decoration: underline; }
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
-        
-        /* Sections */
-        .view-section { display: none; animation: fadeIn 0.5s; }
+        body { background-color: #e9ecef; color: #333; line-height: 1.6; padding-bottom: 50px; }
+
+        /* --- Header --- */
+        header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        header h1 { font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        nav { display: flex; gap: 15px; align-items: center; }
+        nav button { background: none; border: 1px solid transparent; color: rgba(255,255,255,0.9); cursor: pointer; font-size: 0.95rem; padding: 5px 10px; border-radius: 4px; transition: 0.2s; }
+        nav button:hover { background: rgba(255,255,255,0.1); color: white; }
+        nav button.active-nav { background: rgba(255,255,255,0.2); font-weight: bold; }
+
+        /* --- Container & Layout --- */
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .view-section { display: none; animation: fadeIn 0.4s ease-in-out; }
         .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* UI Elements */
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative;}
-        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; display: inline-block; text-align: center;}
+        /* --- Cards & Forms --- */
+        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        h2 { color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid var(--secondary); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--dark); margin: 20px 0 10px; font-size: 1.1rem; }
+
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ced4da; border-radius: 6px; font-size: 1rem; transition: 0.3s; }
+        input:focus, select:focus { border-color: var(--secondary); outline: none; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1); }
+
+        /* --- Buttons --- */
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.2s; display: inline-block; text-align: center; }
+        .btn-block { width: 100%; }
         .btn-primary { background: var(--secondary); color: white; }
-        .btn-primary:hover { background: #219150; }
-        .btn-google { background: white; color: #333; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 10px; }
-        .btn-google:hover { background: #f1f1f1; }
+        .btn-primary:hover { background: #219150; transform: translateY(-1px); }
         .btn-outline { border: 2px solid var(--secondary); color: var(--secondary); background: transparent; }
-        .btn-danger { background: var(--danger); color: white; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; }
+        .btn-outline:hover { background: var(--secondary); color: white; }
+        .btn-danger { background: var(--danger); color: white; font-size: 0.9rem; padding: 8px 16px; }
+        .btn-danger:hover { background: #c82333; }
+
+        /* Google Button */
+        .btn-google { background: white; color: #555; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-bottom: 15px; position: relative; }
+        .btn-google img { width: 20px; }
+        .btn-google:hover { background-color: #f8f9fa; border-color: #ccc; }
+
+        /* --- Checkboxes Grid --- */
+        .checkbox-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 15px 0; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; background: #f8f9fa; padding: 8px; border-radius: 5px; border: 1px solid #e9ecef; }
+        .checkbox-item input { width: auto; margin: 0; cursor: pointer; }
+
+        /* --- Profiles Grid --- */
+        .profiles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .profile-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: transform 0.2s; display: flex; flex-direction: column; }
+        .profile-card:hover { transform: translateY(-5px); }
+        .profile-header { background: linear-gradient(135deg, var(--primary), #34495e); color: white; padding: 20px; text-align: center; }
+        .profile-body { padding: 20px; flex-grow: 1; color: #555; font-size: 0.95rem; }
+        .profile-footer { padding: 15px; border-top: 1px solid #eee; text-align: center; background: #f8f9fa; }
+
+        .tag { display: inline-block; padding: 4px 10px; border-radius: 15px; font-size: 0.8rem; margin: 2px; font-weight: bold; }
+        .tag-green { background: #d4edda; color: #155724; }
+        .tag-blue { background: #d1ecf1; color: #0c5460; }
+
+        /* --- Modal --- */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(2px); }
+        .modal-content { background-color: white; margin: 5% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideDown 0.3s; }
+        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #aaa; }
+        .close-btn:hover { color: var(--dark); }
+
+        /* --- Hero Section --- */
+        .hero { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 0 0 30px 30px; margin-bottom: 40px; }
+        .hero h2 { border: none; color: white; font-size: 2.2rem; }
+        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+        .hero-btn { padding: 18px 35px; font-size: 1.1rem; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .hero-btn.white { background: white; color: var(--primary); }
+        .hero-btn.accent { background: var(--accent); color: white; }
+
+        /* --- Loader --- */
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; color: var(--secondary); font-size: 1.5rem; }
         
-        /* Checkboxes */
-        .checkbox-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 10px 0; }
-        .checkbox-item { display: flex; align-items: center; gap: 5px; }
-        .checkbox-item input { width: auto; margin: 0; }
-
-        /* Cards Grid */
-        .profiles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .profile-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .profile-header { background: var(--secondary); color: white; padding: 15px; text-align: center; }
-        .profile-body { padding: 15px; flex-grow: 1; }
-        .profile-footer { padding: 15px; border-top: 1px solid #eee; text-align: center; }
-        
-        /* Status */
-        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; margin-top: 5px; }
-        .status-available { background: #d4edda; color: #155724; }
-        .status-busy { background: #f8d7da; color: #721c24; }
-
-        /* Modal */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-        .modal-content { background-color: white; margin: 10% auto; padding: 20px; border-radius: 8px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
-        .close { float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-
-        /* Hero */
-        .hero { text-align: center; padding: 50px 20px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 0 0 20px 20px; }
-        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        .hero-btn { padding: 15px 30px; font-size: 1.2rem; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; text-decoration: none;}
-        .hero-btn.assistido { background: white; color: var(--primary); }
-        .hero-btn.cuidador { background: var(--accent); color: white; }
-
-        /* Links */
-        .auth-links { margin-top:15px; text-align:center; font-size: 0.9rem; }
-        .auth-links a { color: var(--primary); text-decoration: none; margin: 0 5px; cursor: pointer;}
+        /* Links utilitarios */
+        .auth-links { margin-top: 15px; text-align: center; font-size: 0.9rem; }
+        .auth-links a { color: var(--primary); text-decoration: none; margin: 0 8px; cursor: pointer; }
         .auth-links a:hover { text-decoration: underline; }
-
-        /* Loader */
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 2000; justify-content: center; align-items: center; font-size: 2rem; color: var(--secondary); }
     </style>
 </head>
 <body>
 
-    <div id="loader"><i class="fas fa-spinner fa-spin"></i></div>
+    <!-- Loader -->
+    <div id="loader">
+        <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+        <p style="margin-top:15px; font-size:1rem; color:#666;">Carregando...</p>
+    </div>
 
+    <!-- Header -->
     <header>
-        <div style="display:flex; align-items:center; gap:10px;">
-            <i class="fas fa-hands-helping fa-2x"></i>
-            <h1>Conexão Cuidado</h1>
-        </div>
-        <nav id="nav-links"></nav>
+        <h1><i class="fas fa-heartbeat"></i> Conexão Cuidado</h1>
+        <nav id="nav-links">
+            <!-- Injetado via JS -->
+        </nav>
     </header>
 
-    <!-- TELA 1: HOME -->
+    <!-- 1. HOME -->
     <section id="home-section" class="view-section active">
         <div class="hero">
-            <h2>Encontre o cuidado ideal ou ofereça seus serviços</h2>
-            <p>Conectando famílias e cuidadores com segurança e eficiência.</p>
+            <h2>Cuidado e carinho ao seu alcance</h2>
+            <p>Conectamos famílias a cuidadores qualificados de forma simples e segura.</p>
             <div class="hero-buttons">
-                <button onclick="window.router('register', 'assistido')" class="hero-btn assistido">💙 Buscar Profissional</button>
-                <button onclick="window.router('register', 'cuidador')" class="hero-btn cuidador">👩‍⚕️ Sou Cuidador</button>
+                <button onclick="window.router('register', 'assistido')" class="hero-btn white"><i class="fas fa-search"></i> Buscar Profissional</button>
+                <button onclick="window.router('register', 'cuidador')" class="hero-btn accent"><i class="fas fa-user-nurse"></i> Sou Cuidador</button>
             </div>
         </div>
-        <div class="container" style="text-align:center; margin-top:40px;">
-            <h3>Já tem cadastro?</h3>
-            <button class="btn btn-outline" onclick="window.router('login')">Fazer Login</button>
+        <div class="container" style="text-align:center;">
+            <h3>Já possui uma conta?</h3>
+            <button class="btn btn-outline" onclick="window.router('login')">Acessar Sistema</button>
         </div>
     </section>
 
-    <!-- TELA 2: LOGIN -->
+    <!-- 2. LOGIN -->
     <section id="login-section" class="view-section">
-        <div class="container" style="max-width: 400px;">
+        <div class="container" style="max-width: 450px;">
             <div class="card">
-                <h2>Login</h2>
+                <h2 style="width:100%; text-align:center; border:none;">Bem-vindo de volta</h2>
                 
-                <!-- Botão Google -->
                 <button class="btn btn-google" id="btn-google-login">
-                    <i class="fab fa-google"></i> Entrar com Google
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                    Entrar com Google
                 </button>
                 
-                <div style="text-align:center; margin: 15px 0; color:#888;">ou use seu e-mail</div>
+                <div style="display:flex; align-items:center; margin: 20px 0; color:#888;">
+                    <hr style="flex:1; border-color:#eee;"> <span style="padding:0 10px; font-size:0.8rem;">OU</span> <hr style="flex:1; border-color:#eee;">
+                </div>
 
-                <input type="email" id="login-email" placeholder="Seu E-mail">
-                <input type="password" id="login-pass" placeholder="Senha">
-                <button class="btn btn-primary" style="width:100%" id="btn-login-action">Entrar</button>
+                <form id="login-form">
+                    <input type="email" id="login-email" placeholder="Seu E-mail" required>
+                    <input type="password" id="login-pass" placeholder="Sua Senha" required>
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top:10px;">Entrar</button>
+                </form>
+
                 <div class="auth-links">
-                    <a onclick="window.router('forgot')">Esqueci a senha</a> | 
-                    <a onclick="window.router('home')">Voltar</a>
+                    <a onclick="window.router('forgot')">Esqueci a senha</a> • 
+                    <a onclick="window.router('home')">Voltar ao início</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- TELA: SELEÇÃO DE PERFIL (GOOGLE NOVO) -->
+    <!-- MODAL: Escolha de Perfil (Para Login Google Novo) -->
     <div id="google-role-modal" class="modal">
-        <div class="modal-content" style="text-align:center;">
-            <h3>Bem-vindo(a)!</h3>
-            <p>Para concluir seu cadastro via Google, selecione seu perfil:</p>
-            <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
-                <button class="btn btn-primary" onclick="setupGoogleFinish('assistido')">💙 Buscar Profissional</button>
-                <button class="btn btn-primary" style="background:var(--accent)" onclick="setupGoogleFinish('cuidador')">👩‍⚕️ Sou Cuidador</button>
+        <div class="modal-content" style="text-align:center; max-width:500px;">
+            <h3 style="margin-top:0;">Finalizar Cadastro</h3>
+            <p>Olá! Detectamos que é seu primeiro acesso.</p>
+            <p><strong>Como você deseja utilizar a plataforma?</strong></p>
+            <div style="display:flex; gap:15px; justify-content:center; margin-top:25px;">
+                <button class="btn btn-primary" onclick="window.setupGoogleFinish('assistido')">
+                    <i class="fas fa-wheelchair"></i> Família / Assistido
+                </button>
+                <button class="btn btn-primary" style="background:var(--accent)" onclick="window.setupGoogleFinish('cuidador')">
+                    <i class="fas fa-user-nurse"></i> Sou Profissional
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- TELA: RECUPERAR SENHA -->
+    <!-- 3. RECUPERAR SENHA -->
     <section id="forgot-section" class="view-section">
-        <div class="container" style="max-width: 400px;">
+        <div class="container" style="max-width: 450px;">
             <div class="card">
-                <h2>Recuperar Senha</h2>
-                <p style="font-size:0.9rem; color:#666; margin-bottom:10px;">Digite seu e-mail cadastrado. O link será enviado pelo Firebase.</p>
-                <input type="email" id="forgot-email" placeholder="E-mail">
-                <button class="btn btn-primary" style="width:100%" id="btn-forgot-action">Enviar E-mail</button>
+                <h2>Recuperação</h2>
+                <p style="font-size:0.9rem; color:#666;">Digite seu e-mail para receber o link de redefinição.</p>
+                <input type="email" id="forgot-email" placeholder="E-mail cadastrado">
+                <button class="btn btn-primary btn-block" id="btn-forgot-action" style="margin-top:10px;">Enviar E-mail</button>
                 <div class="auth-links"><a onclick="window.router('login')">Cancelar</a></div>
             </div>
         </div>
     </section>
 
-    <!-- TELA 3: CADASTRO -->
+    <!-- 4. CADASTRO -->
     <section id="register-section" class="view-section">
-        <div class="container">
+        <div class="container" style="max-width: 800px;">
             <div class="card">
-                <h2 id="reg-title">Cadastro</h2>
+                <h2 id="reg-title">Criar Conta</h2>
                 <form id="reg-form">
                     <input type="hidden" id="reg-type">
                     
-                    <h3>Dados de Acesso</h3>
-                    <input type="text" id="reg-name" placeholder="Nome Completo" required>
-                    <input type="email" id="reg-email" placeholder="E-mail" required>
-                    <!-- Campo senha visível apenas para cadastro normal -->
-                    <div id="password-container">
-                        <input type="password" id="reg-pass" placeholder="Senha (Min. 6 caracteres)">
+                    <h3>1. Dados de Acesso</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <input type="text" id="reg-name" placeholder="Nome Completo" required>
+                        <input type="tel" id="reg-phone" placeholder="WhatsApp (DDD + Número)" required>
                     </div>
                     
-                    <input type="tel" id="reg-phone" placeholder="WhatsApp (apenas números)" required>
-                    <div style="display:flex; gap:10px;">
+                    <!-- Container Senha/Email (Escondido se for Google) -->
+                    <div id="auth-fields-container">
+                        <input type="email" id="reg-email" placeholder="E-mail" required>
+                        <input type="password" id="reg-pass" placeholder="Crie uma senha (mín. 6 dígitos)">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
                         <input type="text" id="reg-city" placeholder="Cidade" required>
                         <input type="text" id="reg-district" placeholder="Bairro" required>
                     </div>
-                    <input type="text" id="reg-photo" placeholder="URL da Foto (ou use a do Google)">
+                    <input type="text" id="reg-photo" placeholder="Link da Foto de Perfil (Opcional)">
 
-                    <!-- Campos Assistido -->
-                    <div id="fields-assistido" style="display:none; margin-top:20px;">
-                        <h3>Sobre o Assistido</h3>
-                        <input type="number" id="reg-age-a" placeholder="Idade">
-                        <select id="reg-condition">
-                            <option value="Idoso">Idoso</option>
-                            <option value="PcD Física">PcD Física</option>
-                            <option value="PcD Intelectual">PcD Intelectual</option>
-                            <option value="Alzheimer">Alzheimer</option>
-                            <option value="Acamado">Acamado</option>
-                        </select>
-                        <h4>Necessidades</h4>
+                    <!-- Campos Específicos: ASSISTIDO -->
+                    <div id="fields-assistido" style="display:none; border-top: 1px solid #eee; margin-top: 20px;">
+                        <h3>2. Perfil do Assistido</h3>
+                        <div style="display:flex; gap:15px;">
+                            <input type="number" id="reg-age-a" placeholder="Idade" style="width:100px;">
+                            <select id="reg-condition">
+                                <option value="" disabled selected>Condição Principal</option>
+                                <option value="Idoso">Idoso (Sem deficiência grave)</option>
+                                <option value="PcD Física">PcD Física</option>
+                                <option value="PcD Intelectual">PcD Intelectual</option>
+                                <option value="Alzheimer">Alzheimer / Demência</option>
+                                <option value="Acamado">Acamado</option>
+                                <option value="Pós-Cirúrgico">Pós-Cirúrgico</option>
+                            </select>
+                        </div>
+                        
+                        <p style="margin-top:15px; font-weight:bold;">Necessidades:</p>
                         <div class="checkbox-group" id="needs-checkboxes"></div>
-                        <h4>Horário</h4>
+                        
+                        <p style="margin-top:15px; font-weight:bold;">Horário Desejado:</p>
                         <select id="reg-schedule-a">
-                            <option value="Integral">Integral</option>
+                            <option value="Integral">Integral (Diurno)</option>
                             <option value="Meio Período">Meio Período</option>
-                            <option value="Plantão">Plantão 12x36</option>
+                            <option value="Plantão 12x36">Plantão 12x36</option>
+                            <option value="Noturno">Noturno</option>
                             <option value="Finais de Semana">Finais de Semana</option>
+                            <option value="Residente">Interno (Dorme no local)</option>
                         </select>
                     </div>
 
-                    <!-- Campos Cuidador -->
-                    <div id="fields-cuidador" style="display:none; margin-top:20px;">
-                        <h3>Perfil Profissional</h3>
-                        <input type="number" id="reg-age-c" placeholder="Idade">
-                        <select id="reg-formation">
-                            <option value="Cuidador">Cuidador (Curso Livre)</option>
-                            <option value="Téc. Enfermagem">Técnico de Enfermagem</option>
-                            <option value="Enfermeiro">Enfermeiro(a)</option>
-                            <option value="Experiência">Experiência Familiar</option>
-                        </select>
-                        <input type="number" id="reg-exp" placeholder="Anos de Experiência">
-                        <input type="text" id="reg-price" placeholder="Valor (ex: R$ 150/dia)">
-                        <h4>Habilidades</h4>
+                    <!-- Campos Específicos: CUIDADOR -->
+                    <div id="fields-cuidador" style="display:none; border-top: 1px solid #eee; margin-top: 20px;">
+                        <h3>2. Perfil Profissional</h3>
+                        <div style="display:flex; gap:15px;">
+                            <input type="number" id="reg-age-c" placeholder="Idade" style="width:100px;">
+                            <select id="reg-formation">
+                                <option value="" disabled selected>Formação Principal</option>
+                                <option value="Cuidador">Cuidador (Curso Livre)</option>
+                                <option value="Téc. Enfermagem">Técnico de Enfermagem</option>
+                                <option value="Enfermeiro">Enfermeiro(a)</option>
+                                <option value="Experiência">Experiência Familiar (Sem curso)</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display:flex; gap:15px;">
+                            <input type="number" id="reg-exp" placeholder="Anos de Exp.">
+                            <input type="text" id="reg-price" placeholder="Pretensão (ex: R$ 150/dia)">
+                        </div>
+
+                        <p style="margin-top:15px; font-weight:bold;">Tenho experiência com:</p>
                         <div class="checkbox-group" id="prefs-checkboxes"></div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="margin-top:20px; width:100%">Finalizar Cadastro</button>
-                    <button type="button" class="btn btn-outline" style="margin-top:10px; width:100%" onclick="window.router('home')">Cancelar</button>
+                    <div style="margin-top:30px; display:flex; gap:10px;">
+                        <button type="submit" class="btn btn-primary" style="flex:2;">Salvar Cadastro</button>
+                        <button type="button" class="btn btn-outline" style="flex:1;" onclick="window.router('home')">Cancelar</button>
+                    </div>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- TELA 4: DASHBOARD -->
+    <!-- 5. DASHBOARD -->
     <section id="dashboard-section" class="view-section">
         <div class="container">
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center;">
-                    <h2 id="dash-title">Painel</h2>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <input type="text" id="search-input" placeholder="Buscar..." style="width:200px; margin:0;">
-                        <button class="btn btn-primary" id="btn-my-profile">Meu Perfil</button>
-                    </div>
+            <!-- Barra de Controle -->
+            <div class="card" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:15px;">
+                <div>
+                    <h2 id="dash-title" style="border:none; margin:0;">Painel</h2>
+                    <p style="font-size:0.9rem; color:#666;" id="dash-subtitle">Encontre o perfil ideal</p>
+                </div>
+                
+                <div style="display:flex; gap:10px; flex-grow: 1; justify-content: flex-end;">
+                    <input type="text" id="search-input" placeholder="Filtrar por nome ou cidade..." style="max-width:300px; margin:0;">
+                    <button class="btn btn-primary" id="btn-my-profile" title="Meu Perfil"><i class="fas fa-user-cog"></i></button>
+                    <button class="btn btn-danger" id="btn-logout" title="Sair"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
 
-            <!-- Edição de Status -->
-            <div id="my-profile-area" class="card" style="display:none; border:2px solid var(--secondary);">
-                <h3>Gerenciar Minha Conta</h3>
-                <label>Disponibilidade:</label>
-                <select id="my-status-select" style="margin-bottom:10px;">
-                    <option value="true">Visível (Buscando)</option>
-                    <option value="false">Oculto (Indisponível)</option>
-                </select>
-                <button class="btn btn-primary" id="btn-update-status">Atualizar Status</button>
-                <button class="btn btn-danger" id="btn-logout" style="float:right;">Sair</button>
+            <!-- Área de Edição (Toggle) -->
+            <div id="my-profile-area" class="card" style="display:none; border:2px solid var(--secondary); background:#fdfdfd;">
+                <h3><i class="fas fa-sliders-h"></i> Configurar Visibilidade</h3>
+                <p>Se você já encontrou o que procurava, marque como "Oculto" para não receber mais contatos.</p>
+                
+                <div style="display:flex; align-items:center; gap:15px; margin-top:15px;">
+                    <select id="my-status-select" style="max-width:250px; margin:0;">
+                        <option value="true">🟢 Visível (Estou Buscando)</option>
+                        <option value="false">🔴 Oculto (Indisponível)</option>
+                    </select>
+                    <button class="btn btn-primary" id="btn-update-status">Salvar Status</button>
+                </div>
             </div>
 
-            <h3 id="list-title" style="margin:20px 0;">Resultados</h3>
-            <div id="results-grid" class="profiles-grid"></div>
+            <!-- Grid de Resultados -->
+            <h3 id="list-title">Resultados na sua rede</h3>
+            <div id="results-grid" class="profiles-grid">
+                <!-- JS preenche -->
+            </div>
+            <p id="no-results" style="display:none; text-align:center; margin-top:30px; color:#777;">Nenhum perfil encontrado com os critérios atuais.</p>
         </div>
     </section>
 
-    <!-- TELA 5: ADMIN -->
+    <!-- 6. ADMIN PANEL -->
     <section id="admin-section" class="view-section">
         <div class="container">
-            <h2>Admin - Todos os Usuários</h2>
             <div class="card">
-                <table style="width:100%; border-collapse:collapse;">
-                    <thead><tr style="background:var(--primary); color:white; text-align:left;"><th>Nome</th><th>Tipo</th><th>Email</th><th>Ação</th></tr></thead>
-                    <tbody id="admin-tbody"></tbody>
-                </table>
-                <button class="btn btn-danger" style="margin-top:20px;" id="btn-admin-logout">Sair do Admin</button>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2>Painel Administrativo</h2>
+                    <button class="btn btn-danger" id="btn-admin-logout">Sair</button>
+                </div>
+                <p>Lista total de usuários cadastrados no sistema.</p>
+                <div style="overflow-x:auto; margin-top:20px;">
+                    <table style="width:100%; border-collapse:collapse; min-width:600px;">
+                        <thead style="background:var(--primary); color:white;">
+                            <tr>
+                                <th style="padding:10px; text-align:left;">Nome</th>
+                                <th style="padding:10px; text-align:left;">Tipo</th>
+                                <th style="padding:10px; text-align:left;">Email</th>
+                                <th style="padding:10px; text-align:left;">Cidade</th>
+                                <th style="padding:10px; text-align:center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-tbody">
+                            <!-- JS preenche -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>
@@ -263,19 +350,19 @@
     <!-- MODAL DETALHES -->
     <div id="detail-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="document.getElementById('detail-modal').style.display='none'">&times;</span>
+            <span class="close-btn" onclick="document.getElementById('detail-modal').style.display='none'">&times;</span>
             <div id="modal-body"></div>
         </div>
     </div>
 
-    <!-- FIREBASE SETUP (Module Type) -->
+    <!-- JAVASCRIPT / FIREBASE -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        // Importações do Auth adicionando GoogleAuthProvider e signInWithPopup
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, query, where } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        // Importando Firebase v10
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // CONFIGURAÇÃO
+        // === CONFIGURAÇÃO FIREBASE ===
         const firebaseConfig = {
             apiKey: "AIzaSyCd40YOqcJP-kWvsdX9TNxym1Baz-btDIM",
             authDomain: "cuidador-2b862.firebaseapp.com",
@@ -286,88 +373,118 @@
             measurementId: "G-JJS8HEBS5V"
         };
 
+        // Inicializar
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Estado Global
-        let currentUser = null; 
-        let currentUserData = null; 
-        let isGoogleRegistration = false; // Flag para saber se estamos completando cadastro Google
+        // --- ESTADO GLOBAL ---
+        let currentUser = null;
+        let currentUserData = null;
+        let isGoogleRegistration = false;
 
-        /* --- UI & ROTEAMENTO --- */
-        const needsOptions = ["Banho", "Alimentação", "Medicamentos", "Troca de Fraldas", "Cadeirante", "Companhia", "Limpeza", "Cozinhar"];
+        const needsList = ["Banho", "Alimentação", "Medicamentos", "Troca de Fraldas", "Cadeirante", "Companhia", "Limpeza Leve", "Cozinhar", "Curativos"];
+
+        // --- FUNÇÕES UTILITÁRIAS (Disponibilizando no window) ---
         
-        window.router = function(screen, param) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(screen + '-section');
-            if(target) target.classList.add('active');
-
-            if(screen === 'register') setupRegister(param);
-            if(screen === 'home') signOut(auth);
-            if(screen === 'dashboard') loadDashboard();
-            
-            updateNav();
-        };
-
+        // Loader
         function loader(show) {
             document.getElementById('loader').style.display = show ? 'flex' : 'none';
         }
 
+        // Router
+        window.router = function(screen, param) {
+            // Esconder todas as seções
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            
+            // Mostrar alvo
+            const target = document.getElementById(screen + '-section');
+            if(target) target.classList.add('active');
+
+            // Lógica específica por tela
+            if(screen === 'register') setupRegister(param);
+            if(screen === 'home') {
+                 // Se foi pra home, limpa a sessão visual, mas o signOut real é no botão
+                 updateNav();
+            }
+            if(screen === 'dashboard') loadDashboard();
+            
+            // Fechar modais ao navegar
+            document.getElementById('google-role-modal').style.display = 'none';
+        };
+
+        // Atualizar Navegação
         function updateNav() {
             const nav = document.getElementById('nav-links');
             if(currentUser && currentUserData) {
-                nav.innerHTML = `<span>Olá, ${currentUserData.name.split(' ')[0]}</span>`;
+                const firstName = currentUserData.name.split(' ')[0];
+                nav.innerHTML = `
+                    <button onclick="window.router('dashboard')" class="active-nav">Painel</button>
+                    <span style="font-size:0.9rem; margin-left:10px;">Olá, ${firstName}</span>
+                `;
             } else {
                 nav.innerHTML = `<button onclick="window.router('login')">Entrar</button>`;
             }
         }
 
-        /* --- AUTHENTICATION LOGIC --- */
-
-        // Monitorar Auth
+        // --- AUTHENTICATION (OBSERVER) ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // Verificar se existe perfil no Firestore
-                const docRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(docRef);
-                
-                if (docSnap.exists()) {
-                    // Usuário completo -> Dashboard
-                    currentUserData = docSnap.data();
-                    document.getElementById('google-role-modal').style.display = 'none'; // Fecha modal se estiver aberto
-                    if(currentUserData.type === 'admin') window.router('admin');
-                    else window.router('dashboard');
-                } else {
-                    // Usuário no Auth mas sem dados (Novo Google User)
-                    // NÃO fazemos logout. Mostramos modal para escolher perfil
-                    document.getElementById('google-role-modal').style.display = 'block';
-                    // Esconde outras telas
-                    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                // Buscar dados no Firestore
+                try {
+                    const docRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(docRef);
+                    
+                    if (docSnap.exists()) {
+                        // Usuário JÁ cadastrado
+                        currentUserData = docSnap.data();
+                        updateNav();
+
+                        // Se estiver no modal de google role, esconde
+                        document.getElementById('google-role-modal').style.display = 'none';
+
+                        // Redirecionamento inteligente
+                        const currentHash = document.querySelector('.view-section.active').id;
+                        if(currentHash === 'login-section' || currentHash === 'register-section' || currentHash === 'home-section') {
+                            if(currentUserData.type === 'admin') window.router('admin');
+                            else window.router('dashboard');
+                        }
+                    } else {
+                        // Usuário logado no Auth, mas SEM perfil no Firestore (Novo Google User)
+                        // Mostra modal de escolha
+                        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                        document.getElementById('google-role-modal').style.display = 'block';
+                    }
+                } catch (e) {
+                    console.error("Erro ao buscar perfil", e);
                 }
             } else {
+                // Deslogado
                 currentUser = null;
                 currentUserData = null;
-                // Se não estiver em tela de login/registro, vai pra home
-                if(!document.querySelector('#login-section.active') && 
-                   !document.querySelector('#register-section.active') && 
-                   !document.querySelector('#forgot-section.active')) {
+                updateNav();
+                const safeScreens = ['home-section', 'login-section', 'register-section', 'forgot-section'];
+                const currentScreen = document.querySelector('.view-section.active');
+                
+                if (currentScreen && !safeScreens.includes(currentScreen.id)) {
                     window.router('home');
                 }
             }
         });
 
-        // Login com Email/Senha
-        document.getElementById('btn-login-action').addEventListener('click', async () => {
+        // --- LOGIN E-MAIL ---
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
-            if(!email || !pass) return alert("Preencha email e senha");
+            
             loader(true);
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
+                // onAuthStateChanged cuida do resto
             } catch (error) {
-                alert("Erro: " + error.message);
+                alert("Erro ao entrar: " + parseAuthError(error.code));
                 loader(false);
             }
         });
@@ -377,65 +494,82 @@
             const provider = new GoogleAuthProvider();
             try {
                 await signInWithPopup(auth, provider);
-                // onAuthStateChanged vai lidar com o resto
             } catch (error) {
                 console.error(error);
-                alert("Erro no login Google: " + error.message);
+                if(error.code === 'auth/unauthorized-domain') {
+                    alert("ERRO DE DOMÍNIO: Adicione 'localhost' ou seu domínio do GitHub no Firebase Console > Authentication > Configurações > Domínios Autorizados.");
+                } else {
+                    alert("Erro Login Google: " + error.message);
+                }
             }
         });
 
-        // Configurar Formulário para Finalizar Google (Chamado pelo Modal)
+        // --- PREPARAR CADASTRO PÓS-GOOGLE ---
         window.setupGoogleFinish = function(type) {
             document.getElementById('google-role-modal').style.display = 'none';
             isGoogleRegistration = true;
             window.router('register', type);
             
-            // Preencher dados do Google
+            // Preencher o que temos
             if(currentUser) {
                 document.getElementById('reg-name').value = currentUser.displayName || "";
                 document.getElementById('reg-email').value = currentUser.email || "";
                 document.getElementById('reg-photo').value = currentUser.photoURL || "";
                 
-                // Travar campos que vieram do Google
+                // Travar campos Auth
                 document.getElementById('reg-email').disabled = true;
-                // Ocultar senha
-                document.getElementById('password-container').style.display = 'none';
+                document.getElementById('auth-fields-container').style.display = 'none';
             }
         };
 
-        // Logout
-        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
-        document.getElementById('btn-admin-logout').addEventListener('click', () => signOut(auth));
+        // --- LOGOUT ---
+        const doLogout = () => {
+            signOut(auth).then(() => {
+                window.router('home');
+                alert("Você saiu do sistema.");
+            });
+        };
+        document.getElementById('btn-logout').onclick = doLogout;
+        document.getElementById('btn-admin-logout').onclick = doLogout;
 
-        // Recuperar Senha
-        document.getElementById('btn-forgot-action').addEventListener('click', async () => {
+        // --- RECUPERAR SENHA ---
+        document.getElementById('btn-forgot-action').onclick = async () => {
             const email = document.getElementById('forgot-email').value;
-            if(!email) return alert("Digite o email");
+            if(!email) return alert("Digite o e-mail.");
             loader(true);
             try {
                 await sendPasswordResetEmail(auth, email);
-                alert("Link enviado!");
+                alert("Link enviado! Verifique sua caixa de entrada (e spam).");
                 window.router('login');
-            } catch (error) { alert("Erro: " + error.message); } finally { loader(false); }
-        });
+            } catch (e) { alert("Erro: " + e.message); }
+            finally { loader(false); }
+        };
 
-        /* --- CADASTRO (Firestore) --- */
+        // --- CADASTRO LÓGICA ---
         function setupRegister(type) {
             document.getElementById('reg-form').reset();
             document.getElementById('reg-type').value = type;
-            document.getElementById('reg-title').innerText = type === 'assistido' ? "Cadastro (Família)" : "Cadastro (Cuidador)";
             
-            document.getElementById('fields-assistido').style.display = type === 'assistido' ? 'block' : 'none';
-            document.getElementById('fields-cuidador').style.display = type === 'cuidador' ? 'block' : 'none';
+            const titleMap = { 'assistido': 'Família: Buscar Cuidador', 'cuidador': 'Profissional: Oferecer Serviços' };
+            document.getElementById('reg-title').innerText = titleMap[type];
 
-            // Restaurar visual padrão se não for Google
+            // Toggle Visual
+            document.getElementById('fields-assistido').style.display = (type === 'assistido') ? 'block' : 'none';
+            document.getElementById('fields-cuidador').style.display = (type === 'cuidador') ? 'block' : 'none';
+
+            // Resetar visual se não for Google
             if(!isGoogleRegistration) {
                 document.getElementById('reg-email').disabled = false;
-                document.getElementById('password-container').style.display = 'block';
+                document.getElementById('auth-fields-container').style.display = 'block';
             }
 
-            const container = type === 'assistido' ? document.getElementById('needs-checkboxes') : document.getElementById('prefs-checkboxes');
-            container.innerHTML = needsOptions.map(opt => `<div class="checkbox-item"><input type="checkbox" value="${opt}" name="specs"> ${opt}</div>`).join('');
+            // Checkboxes
+            const container = (type === 'assistido') ? document.getElementById('needs-checkboxes') : document.getElementById('prefs-checkboxes');
+            container.innerHTML = needsList.map(opt => `
+                <div class="checkbox-item">
+                    <input type="checkbox" value="${opt}" name="specs"> <span>${opt}</span>
+                </div>
+            `).join('');
         }
 
         document.getElementById('reg-form').addEventListener('submit', async (e) => {
@@ -452,16 +586,14 @@
                 let uid;
 
                 if (isGoogleRegistration) {
-                    // Usuário já está autenticado pelo Google
                     uid = currentUser.uid;
                 } else {
-                    // Cadastro Normal: Criar Auth
-                    if(pass.length < 6) throw new Error("Senha deve ter 6+ caracteres");
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                    uid = userCredential.user.uid;
+                    if(pass.length < 6) throw new Error("A senha deve ter pelo menos 6 caracteres.");
+                    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                    uid = cred.user.uid;
                 }
 
-                // Dados para o Firestore
+                // Objeto Base
                 const userData = {
                     uid: uid,
                     type: type,
@@ -475,6 +607,7 @@
                     createdAt: new Date()
                 };
 
+                // Dados Específicos
                 if (type === 'assistido') {
                     userData.age = document.getElementById('reg-age-a').value;
                     userData.condition = document.getElementById('reg-condition').value;
@@ -488,104 +621,186 @@
                     userData.prefs = specs;
                 }
 
-                // Salvar
+                // Salvar no Firestore
                 await setDoc(doc(db, "users", uid), userData);
                 
-                alert("Cadastro concluído!");
-                isGoogleRegistration = false; // Reset flag
+                alert("Cadastro realizado com sucesso!");
+                isGoogleRegistration = false;
                 
-                // Forçar atualização do state se for Google (pois auth state não mudou)
-                if(currentUser) {
+                // Atualizar estado local
+                if(auth.currentUser) {
                     currentUserData = userData;
                     window.router('dashboard');
+                } else {
+                    window.router('login');
                 }
+
             } catch (error) {
-                alert("Erro: " + error.message);
+                alert("Erro no cadastro: " + error.message);
+            } finally {
                 loader(false);
             }
         });
 
-        /* --- DASHBOARD --- */
+        // --- DASHBOARD ---
         async function loadDashboard() {
             if(!currentUserData) return;
             loader(true);
+            
             const title = document.getElementById('dash-title');
+            const sub = document.getElementById('dash-subtitle');
             const listTitle = document.getElementById('list-title');
             const grid = document.getElementById('results-grid');
+            const noRes = document.getElementById('no-results');
+
+            // Lógica Cruzada: Família vê Cuidador, Cuidador vê Família
+            let targetType = (currentUserData.type === 'assistido') ? 'cuidador' : 'assistido';
             
-            let targetType = currentUserData.type === 'assistido' ? 'cuidador' : 'assistido';
-            title.innerText = currentUserData.type === 'assistido' ? "Família: Encontrar Cuidadores" : "Profissional: Vagas Disponíveis";
-            listTitle.innerText = currentUserData.type === 'assistido' ? "Profissionais Próximos" : "Famílias Buscando Ajuda";
+            if(currentUserData.type === 'assistido') {
+                title.innerText = "Painel da Família";
+                sub.innerText = "Busque profissionais qualificados.";
+                listTitle.innerText = "Cuidadores Disponíveis";
+            } else {
+                title.innerText = "Painel do Profissional";
+                sub.innerText = "Gerencie sua disponibilidade e veja oportunidades.";
+                listTitle.innerText = "Famílias Buscando Ajuda";
+            }
+
+            // Setar status atual no select
             document.getElementById('my-status-select').value = currentUserData.active.toString();
 
             try {
-                const q = query(collection(db, "users"), where("type", "==", targetType), where("active", "==", true));
-                const querySnapshot = await getDocs(q);
+                // QUERY SEGURA: Só busca users ATIVOS do tipo ALVO.
+                // Isso combina com a regra de segurança: allow read if active == true ...
+                const q = query(
+                    collection(db, "users"), 
+                    where("type", "==", targetType), 
+                    where("active", "==", true)
+                );
+                
+                const snap = await getDocs(q);
                 grid.innerHTML = '';
-                if(querySnapshot.empty) grid.innerHTML = '<p>Nenhum resultado.</p>';
+                
+                if(snap.empty) {
+                    noRes.style.display = 'block';
+                } else {
+                    noRes.style.display = 'none';
+                    snap.forEach((d) => {
+                        const u = d.data();
+                        
+                        // Filtro Local (Nome/Cidade)
+                        const term = document.getElementById('search-input').value.toLowerCase();
+                        if(term && !u.name.toLowerCase().includes(term) && !u.city.toLowerCase().includes(term)) return;
 
-                querySnapshot.forEach((doc) => {
-                    const u = doc.data();
-                    const term = document.getElementById('search-input').value.toLowerCase();
-                    if(term && !u.name.toLowerCase().includes(term) && !u.city.toLowerCase().includes(term)) return;
+                        // Card HTML
+                        let badge = '';
+                        let details = '';
+                        
+                        if(u.type === 'assistido') {
+                            badge = '<span class="tag tag-blue">Família</span>';
+                            details = `<p><strong>Condição:</strong> ${u.condition}</p><p><strong>Regime:</strong> ${u.schedule}</p>`;
+                        } else {
+                            badge = '<span class="tag tag-green">Profissional</span>';
+                            details = `<p><strong>Formação:</strong> ${u.formation}</p><p><strong>Valor:</strong> ${u.price}</p>`;
+                        }
 
-                    let details = u.type === 'assistido' 
-                        ? `<p><strong>Condição:</strong> ${u.condition}</p>` 
-                        : `<p><strong>Formação:</strong> ${u.formation}</p><p><strong>Valor:</strong> ${u.price}</p>`;
+                        grid.innerHTML += `
+                            <div class="profile-card">
+                                <div class="profile-header">
+                                    <img src="${u.photo}" style="width:70px; height:70px; border-radius:50%; border:3px solid rgba(255,255,255,0.5); object-fit:cover; margin-bottom:10px;">
+                                    <h3 style="margin:0; color:white; font-size:1.1rem;">${u.name}</h3>
+                                    <small style="opacity:0.9;">${u.city}, ${u.district}</small>
+                                </div>
+                                <div class="profile-body">
+                                    ${details}
+                                    <div style="margin-top:10px;">
+                                        ${u.type === 'assistido' ? u.needs.slice(0,3).map(n=>`<span class="tag tag-blue" style="font-size:0.7rem">${n}</span>`).join('') : u.prefs.slice(0,3).map(n=>`<span class="tag tag-green" style="font-size:0.7rem">${n}</span>`).join('')}
+                                        ${(u.type==='assistido'?u.needs.length:u.prefs.length) > 3 ? '<span class="tag" style="font-size:0.7rem">...</span>' : ''}
+                                    </div>
+                                </div>
+                                <div class="profile-footer">
+                                    <button class="btn btn-primary btn-block" onclick="window.showDetails('${u.uid}')">Ver Detalhes</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
 
-                    grid.innerHTML += `
-                        <div class="profile-card">
-                            <div class="profile-header">
-                                <h3>${u.name}</h3>
-                                <small>${u.city} - ${u.district}</small>
-                            </div>
-                            <div class="profile-body">
-                                <div style="text-align:center;"><img src="${u.photo}" style="width:80px; height:80px; border-radius:50%; object-fit:cover;"></div>
-                                ${details}
-                            </div>
-                            <div class="profile-footer">
-                                <button class="btn btn-primary" onclick="window.showDetails('${u.uid}')">Ver Contato</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            } catch (err) { console.error(err); } finally { loader(false); }
+            } catch (err) {
+                console.error("Erro Dashboard:", err);
+                // Se der erro de permissão, é provável que as regras do Firestore não estejam batendo com a query
+                if(err.code === 'permission-denied') {
+                    alert("Erro de permissão. Verifique as regras no Firebase Console.");
+                }
+            } finally {
+                loader(false);
+            }
         }
 
+        // Filtro em tempo real
         document.getElementById('search-input').addEventListener('keyup', loadDashboard);
 
-        /* --- DETALHES --- */
+        // --- DETALHES ---
         window.showDetails = async function(uid) {
             loader(true);
-            const snap = await getDoc(doc(db, "users", uid));
-            loader(false);
-            if(snap.exists()){
-                const u = snap.data();
-                const body = document.getElementById('modal-body');
-                let extra = u.type === 'assistido' 
-                    ? `<p><strong>Necessidades:</strong> ${u.needs.join(', ')}</p><p><strong>Horário:</strong> ${u.schedule}</p>`
-                    : `<p><strong>Habilidades:</strong> ${u.prefs.join(', ')}</p><p><strong>Experiência:</strong> ${u.exp} anos</p>`;
+            try {
+                const docRef = doc(db, "users", uid);
+                const snap = await getDoc(docRef);
+                
+                if(snap.exists()){
+                    const u = snap.data();
+                    const body = document.getElementById('modal-body');
+                    
+                    let extraInfo = '';
+                    if(u.type === 'assistido') {
+                        extraInfo = `
+                            <h4>Necessidades de Cuidado</h4>
+                            <div class="checkbox-group" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
+                                ${u.needs.map(n => `<span class="tag tag-blue">${n}</span>`).join('')}
+                            </div>
+                            <p style="margin-top:10px;"><strong>Horário:</strong> ${u.schedule}</p>
+                            <p><strong>Idade do Assistido:</strong> ${u.age || '-'} anos</p>
+                            <p><strong>Condição:</strong> ${u.condition}</p>
+                        `;
+                    } else {
+                        extraInfo = `
+                            <h4>Qualificações</h4>
+                            <p><strong>Formação:</strong> ${u.formation}</p>
+                            <p><strong>Experiência:</strong> ${u.exp} anos</p>
+                            <p><strong>Pretensão:</strong> ${u.price}</p>
+                            <div class="checkbox-group" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
+                                ${u.prefs.map(n => `<span class="tag tag-green">${n}</span>`).join('')}
+                            </div>
+                        `;
+                    }
 
-                body.innerHTML = `
-                    <div style="text-align:center">
-                        <img src="${u.photo}" style="width:100px; height:100px; border-radius:50%; object-fit:cover;">
-                        <h2>${u.name}</h2>
-                        <p class="status-badge status-available">${u.city}</p>
-                    </div>
-                    <hr style="margin:15px 0;">
-                    ${extra}
-                    <br>
-                    <a href="https://wa.me/55${u.phone.replace(/\D/g,'')}" target="_blank" class="btn btn-primary" style="display:block; text-align:center; text-decoration:none;">
-                        <i class="fab fa-whatsapp"></i> Chamar no WhatsApp
-                    </a>
-                `;
-                document.getElementById('detail-modal').style.display = 'block';
-            }
+                    const wppLink = `https://wa.me/55${u.phone.replace(/\D/g,'')}`;
+
+                    body.innerHTML = `
+                        <div style="text-align:center; padding-bottom:15px; border-bottom:1px solid #eee;">
+                            <img src="${u.photo}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
+                            <h2 style="border:none; margin:10px 0 5px;">${u.name}</h2>
+                            <p style="color:#666;"><i class="fas fa-map-marker-alt"></i> ${u.city} - ${u.district}</p>
+                        </div>
+                        <div style="padding:15px 0;">
+                            ${extraInfo}
+                        </div>
+                        <div style="text-align:center; margin-top:20px;">
+                            <a href="${wppLink}" target="_blank" class="btn btn-primary btn-block" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px;">
+                                <i class="fab fa-whatsapp fa-lg"></i> Entrar em Contato
+                            </a>
+                        </div>
+                    `;
+                    document.getElementById('detail-modal').style.display = 'block';
+                }
+            } catch (e) { console.error(e); }
+            finally { loader(false); }
         };
 
+        // --- ATUALIZAR STATUS ---
         document.getElementById('btn-my-profile').addEventListener('click', () => {
             const el = document.getElementById('my-profile-area');
-            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
         });
 
         document.getElementById('btn-update-status').addEventListener('click', async () => {
@@ -594,29 +809,56 @@
             try {
                 await updateDoc(doc(db, "users", currentUser.uid), { active: newVal });
                 currentUserData.active = newVal;
-                alert("Status atualizado!");
-                loadDashboard();
-            } catch (e) { alert("Erro: " + e.message); } finally { loader(false); }
+                alert("Visibilidade atualizada com sucesso!");
+                loadDashboard(); // Recarrega para ver efeito
+            } catch (e) { alert("Erro: " + e.message); } 
+            finally { loader(false); }
         });
 
-        /* --- ADMIN --- */
+        // --- ADMIN PANEL ---
         if(window.location.hash === '#admin') window.router('admin');
-        const originalRouter = window.router;
+        const _originalRouter = window.router;
         window.router = function(screen, param) {
-            originalRouter(screen, param);
+            _originalRouter(screen, param);
             if(screen === 'admin') loadAdmin();
         }
+
         async function loadAdmin() {
+            if(!currentUserData || currentUserData.type !== 'admin') return;
             const tBody = document.getElementById('admin-tbody');
-            tBody.innerHTML = 'Carregando...';
-            const snaps = await getDocs(query(collection(db, "users")));
-            tBody.innerHTML = '';
-            snaps.forEach(d => {
-                const u = d.data();
-                tBody.innerHTML += `<tr><td>${u.name}</td><td>${u.type}</td><td>${u.email}</td><td>-</td></tr>`;
-            });
+            tBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Carregando...</td></tr>';
+            
+            try {
+                const snap = await getDocs(collection(db, "users"));
+                tBody.innerHTML = '';
+                snap.forEach(d => {
+                    const u = d.data();
+                    tBody.innerHTML += `
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td style="padding:10px;">${u.name}</td>
+                            <td style="padding:10px;">${u.type}</td>
+                            <td style="padding:10px;">${u.email}</td>
+                            <td style="padding:10px;">${u.city}</td>
+                            <td style="padding:10px; text-align:center;">
+                                ${u.active ? '<span class="tag tag-green">Ativo</span>' : '<span class="tag" style="background:#eee; color:#999;">Oculto</span>'}
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { tBody.innerHTML = `<tr><td colspan="5">Erro: ${e.message}</td></tr>`; }
         }
 
+        // Helper Erros
+        function parseAuthError(code) {
+            switch(code) {
+                case 'auth/wrong-password': return 'Senha incorreta.';
+                case 'auth/user-not-found': return 'Usuário não encontrado.';
+                case 'auth/email-already-in-use': return 'E-mail já cadastrado.';
+                case 'auth/invalid-email': return 'E-mail inválido.';
+                case 'auth/weak-password': return 'A senha deve ser mais forte.';
+                default: return code;
+            }
+        }
     </script>
 </body>
 </html>
