@@ -1,61 +1,49 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexão Cuidado - Cuidadores e Assistidos</title>
+    <title>Conexão Cuidado - App Conectado</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #27ae60;
-            --accent: #e67e22;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --danger: #e74c3c;
-        }
-
+        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #e67e22; --light: #ecf0f1; --dark: #2c3e50; --danger: #e74c3c; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
         body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
-
-        /* Layout & Nav */
+        
+        /* Layout */
         header { background: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
         header h1 { font-size: 1.5rem; }
         nav button { background: none; border: none; color: white; cursor: pointer; margin-left: 15px; font-size: 1rem; }
         nav button:hover { text-decoration: underline; }
-
         .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
         
-        /* Sections logic */
+        /* Sections */
         .view-section { display: none; animation: fadeIn 0.5s; }
         .view-section.active { display: block; }
-        
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Cards & Forms */
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        
+        /* UI Elements */
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative;}
         .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn-primary { background: var(--secondary); color: white; }
         .btn-primary:hover { background: #219150; }
         .btn-outline { border: 2px solid var(--secondary); color: var(--secondary); background: transparent; }
         .btn-danger { background: var(--danger); color: white; }
-        
         input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; }
         
+        /* Checkboxes */
         .checkbox-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 10px 0; }
         .checkbox-item { display: flex; align-items: center; gap: 5px; }
         .checkbox-item input { width: auto; margin: 0; }
 
-        /* Grid de Perfis */
+        /* Cards Grid */
         .profiles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .profile-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         .profile-header { background: var(--secondary); color: white; padding: 15px; text-align: center; }
         .profile-body { padding: 15px; flex-grow: 1; }
         .profile-footer { padding: 15px; border-top: 1px solid #eee; text-align: center; }
         
+        /* Status */
         .status-badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; margin-top: 5px; }
         .status-available { background: #d4edda; color: #155724; }
         .status-busy { background: #f8d7da; color: #721c24; }
@@ -65,55 +53,47 @@
         .modal-content { background-color: white; margin: 10% auto; padding: 20px; border-radius: 8px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
         .close { float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
 
-        /* Chat Simulado */
-        .chat-box { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; background: #f9f9f9; }
-        .msg { margin-bottom: 8px; padding: 8px; border-radius: 5px; max-width: 80%; }
-        .msg-me { background: #dcf8c6; margin-left: auto; }
-        .msg-other { background: #fff; border: 1px solid #ddd; }
-
-        /* Home Hero */
+        /* Hero */
         .hero { text-align: center; padding: 50px 20px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 0 0 20px 20px; }
-        .hero h2 { font-size: 2.5rem; margin-bottom: 20px; }
-        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        .hero-btn { padding: 15px 30px; font-size: 1.2rem; border-radius: 30px; text-decoration: none; cursor: pointer; border: none; font-weight: bold; }
+        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .hero-btn { padding: 15px 30px; font-size: 1.2rem; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; text-decoration: none;}
         .hero-btn.assistido { background: white; color: var(--primary); }
         .hero-btn.cuidador { background: var(--accent); color: white; }
 
-        /* Admin Panel */
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .admin-table th, .admin-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .admin-table th { background-color: var(--primary); color: white; }
+        /* Links */
+        .auth-links { margin-top:15px; text-align:center; font-size: 0.9rem; }
+        .auth-links a { color: var(--primary); text-decoration: none; margin: 0 5px; cursor: pointer;}
+        .auth-links a:hover { text-decoration: underline; }
+
+        /* Loader */
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 2000; justify-content: center; align-items: center; font-size: 2rem; color: var(--secondary); }
     </style>
 </head>
 <body>
 
-    <!-- Header / Navegação -->
+    <div id="loader"><i class="fas fa-spinner fa-spin"></i></div>
+
     <header>
         <div style="display:flex; align-items:center; gap:10px;">
             <i class="fas fa-hands-helping fa-2x"></i>
             <h1>Conexão Cuidado</h1>
         </div>
-        <nav id="nav-links">
-            <!-- Links injetados via JS -->
-        </nav>
+        <nav id="nav-links"></nav>
     </header>
 
-    <!-- TELA 1: HOME (Landing Page) -->
+    <!-- TELA 1: HOME -->
     <section id="home-section" class="view-section active">
         <div class="hero">
             <h2>Encontre o cuidado ideal ou ofereça seus serviços</h2>
             <p>Conectando famílias e cuidadores com segurança e eficiência.</p>
-            <br>
-            <div class="hero-buttons" id="home-actions">
-                <button onclick="showRegister('assistido')" class="hero-btn assistido">💙 Buscar Cuidador (Família)</button>
-                <button onclick="showRegister('cuidador')" class="hero-btn cuidador">👩‍⚕️ Sou Cuidador (Trabalhar)</button>
+            <div class="hero-buttons">
+                <button onclick="window.router('register', 'assistido')" class="hero-btn assistido">💙 Buscar Profissional</button>
+                <button onclick="window.router('register', 'cuidador')" class="hero-btn cuidador">👩‍⚕️ Sou Cuidador</button>
             </div>
         </div>
-        <div class="container">
-            <div style="text-align:center; margin-top: 40px;">
-                <h3>Já tem cadastro?</h3>
-                <button class="btn btn-outline" onclick="showLogin()">Fazer Login</button>
-            </div>
+        <div class="container" style="text-align:center; margin-top:40px;">
+            <h3>Já tem cadastro?</h3>
+            <button class="btn btn-outline" onclick="window.router('login')">Fazer Login</button>
         </div>
     </section>
 
@@ -124,13 +104,24 @@
                 <h2>Login</h2>
                 <input type="email" id="login-email" placeholder="Seu E-mail">
                 <input type="password" id="login-pass" placeholder="Senha">
-                <button class="btn btn-primary" style="width:100%" onclick="handleLogin()">Entrar</button>
-                <p style="margin-top:10px; text-align:center;">
-                    <a href="#" onclick="app.router('home')">Voltar</a>
-                </p>
-                <div style="margin-top:20px; font-size:0.8rem; color:grey; border-top:1px solid #eee; padding-top:10px;">
-                    <p><strong>Admin Demo:</strong> admin@admin.com / 1234</p>
+                <button class="btn btn-primary" style="width:100%" id="btn-login-action">Entrar</button>
+                <div class="auth-links">
+                    <a onclick="window.router('forgot')">Esqueci a senha</a> | 
+                    <a onclick="window.router('home')">Voltar</a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TELA: RECUPERAR SENHA -->
+    <section id="forgot-section" class="view-section">
+        <div class="container" style="max-width: 400px;">
+            <div class="card">
+                <h2>Recuperar Senha</h2>
+                <p style="font-size:0.9rem; color:#666; margin-bottom:10px;">Digite seu e-mail cadastrado. O link será enviado pelo Firebase.</p>
+                <input type="email" id="forgot-email" placeholder="E-mail">
+                <button class="btn btn-primary" style="width:100%" id="btn-forgot-action">Enviar E-mail</button>
+                <div class="auth-links"><a onclick="window.router('login')">Cancelar</a></div>
             </div>
         </div>
     </section>
@@ -140,515 +131,458 @@
         <div class="container">
             <div class="card">
                 <h2 id="reg-title">Cadastro</h2>
-                <p style="color: #666; margin-bottom: 20px;">Preencha os dados com atenção.</p>
-                
-                <form id="reg-form" onsubmit="handleRegister(event)">
+                <form id="reg-form">
                     <input type="hidden" id="reg-type">
                     
-                    <!-- Dados Comuns -->
                     <h3>Dados de Acesso</h3>
                     <input type="text" id="reg-name" placeholder="Nome Completo" required>
                     <input type="email" id="reg-email" placeholder="E-mail" required>
-                    <input type="password" id="reg-pass" placeholder="Senha" required>
-                    <input type="tel" id="reg-phone" placeholder="Telefone / WhatsApp" required>
+                    <input type="password" id="reg-pass" placeholder="Senha (Min. 6 caracteres)" required>
+                    <input type="tel" id="reg-phone" placeholder="WhatsApp (apenas números)" required>
                     <div style="display:flex; gap:10px;">
                         <input type="text" id="reg-city" placeholder="Cidade" required>
                         <input type="text" id="reg-district" placeholder="Bairro" required>
                     </div>
                     <input type="text" id="reg-photo" placeholder="URL da Foto (Opcional)">
 
-                    <!-- Campos Específicos: ASSISTIDO -->
+                    <!-- Campos Assistido -->
                     <div id="fields-assistido" style="display:none; margin-top:20px;">
                         <h3>Sobre o Assistido</h3>
-                        <input type="number" id="reg-age-a" placeholder="Idade do Assistido">
-                        <label>Condição Principal:</label>
+                        <input type="number" id="reg-age-a" placeholder="Idade">
                         <select id="reg-condition">
-                            <option value="Idoso">Idoso (Sem deficiência grave)</option>
+                            <option value="Idoso">Idoso</option>
                             <option value="PcD Física">PcD Física</option>
                             <option value="PcD Intelectual">PcD Intelectual</option>
-                            <option value="Alzheimer">Alzheimer / Demência</option>
+                            <option value="Alzheimer">Alzheimer</option>
                             <option value="Acamado">Acamado</option>
-                            <option value="Outro">Outro</option>
                         </select>
-
-                        <h4>Necessidades Especiais</h4>
-                        <div class="checkbox-group" id="needs-checkboxes">
-                            <!-- JS irá preencher -->
-                        </div>
-
-                        <h4>Horários Necessários</h4>
+                        <h4>Necessidades</h4>
+                        <div class="checkbox-group" id="needs-checkboxes"></div>
+                        <h4>Horário</h4>
                         <select id="reg-schedule-a">
-                            <option value="Integral">Integral (8h-18h)</option>
+                            <option value="Integral">Integral</option>
                             <option value="Meio Período">Meio Período</option>
-                            <option value="Plantão 12x36">Plantão 12x36</option>
+                            <option value="Plantão">Plantão 12x36</option>
                             <option value="Finais de Semana">Finais de Semana</option>
-                            <option value="Interno (Dorme)">Interno (Dorme no local)</option>
                         </select>
                     </div>
 
-                    <!-- Campos Específicos: CUIDADOR -->
+                    <!-- Campos Cuidador -->
                     <div id="fields-cuidador" style="display:none; margin-top:20px;">
                         <h3>Perfil Profissional</h3>
-                        <input type="number" id="reg-age-c" placeholder="Sua Idade">
-                        <label>Formação:</label>
+                        <input type="number" id="reg-age-c" placeholder="Idade">
                         <select id="reg-formation">
-                            <option value="Cuidador (Curso Livre)">Cuidador (Curso Livre)</option>
-                            <option value="Técnico de Enfermagem">Técnico de Enfermagem</option>
+                            <option value="Cuidador">Cuidador (Curso Livre)</option>
+                            <option value="Téc. Enfermagem">Técnico de Enfermagem</option>
                             <option value="Enfermeiro">Enfermeiro(a)</option>
-                            <option value="Experiência Familiar">Experiência Familiar (Sem curso)</option>
+                            <option value="Experiência">Experiência Familiar</option>
                         </select>
-                        
                         <input type="number" id="reg-exp" placeholder="Anos de Experiência">
-                        <input type="text" id="reg-price" placeholder="Valor base (ex: R$ 150/dia)">
-
-                        <h4>Preferências de Atendimento</h4>
-                        <div class="checkbox-group" id="prefs-checkboxes">
-                            <!-- JS preenche -->
-                        </div>
+                        <input type="text" id="reg-price" placeholder="Valor (ex: R$ 150/dia)">
+                        <h4>Habilidades</h4>
+                        <div class="checkbox-group" id="prefs-checkboxes"></div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="margin-top:20px; width:100%">Cadastrar</button>
-                    <button type="button" class="btn btn-outline" style="margin-top:10px; width:100%" onclick="app.router('home')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="margin-top:20px; width:100%">Finalizar Cadastro</button>
+                    <button type="button" class="btn btn-outline" style="margin-top:10px; width:100%" onclick="window.router('home')">Cancelar</button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- TELA 4: DASHBOARD (Busca e Listagem) -->
+    <!-- TELA 4: DASHBOARD -->
     <section id="dashboard-section" class="view-section">
         <div class="container">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center;">
                     <h2 id="dash-title">Painel</h2>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="search-input" placeholder="Buscar por nome, cidade..." onkeyup="renderList()" style="width:250px; margin:0;">
-                        <button class="btn btn-primary" onclick="toggleMyProfile()">Meu Perfil</button>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <input type="text" id="search-input" placeholder="Buscar..." style="width:200px; margin:0;">
+                        <button class="btn btn-primary" id="btn-my-profile">Meu Perfil</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal Meu Perfil (Edição rápida) -->
-            <div id="my-profile-area" class="card" style="display:none; border: 2px solid var(--secondary);">
-                <h3>Meu Perfil e Status</h3>
-                <p>Mantenha seus dados atualizados para aparecer nas buscas.</p>
-                <div style="margin: 10px 0;">
-                    <label><strong>Disponibilidade:</strong></label>
-                    <select id="my-status" onchange="updateMyStatus()">
-                        <option value="true">Disponível / Buscando</option>
-                        <option value="false">Indisponível / Já Contratado</option>
-                    </select>
-                </div>
-                <button class="btn btn-danger" onclick="deleteAccount()">Excluir Conta</button>
+            <!-- Edição de Status -->
+            <div id="my-profile-area" class="card" style="display:none; border:2px solid var(--secondary);">
+                <h3>Gerenciar Minha Conta</h3>
+                <label>Disponibilidade:</label>
+                <select id="my-status-select" style="margin-bottom:10px;">
+                    <option value="true">Visível (Buscando)</option>
+                    <option value="false">Oculto (Indisponível)</option>
+                </select>
+                <button class="btn btn-primary" id="btn-update-status">Atualizar Status</button>
+                <button class="btn btn-danger" id="btn-logout" style="float:right;">Sair</button>
             </div>
 
-            <h3 id="list-title" style="margin: 20px 0;">Resultados</h3>
-            <div id="results-grid" class="profiles-grid">
-                <!-- JS Renderiza Cards Aqui -->
-            </div>
+            <h3 id="list-title" style="margin:20px 0;">Resultados</h3>
+            <div id="results-grid" class="profiles-grid"></div>
         </div>
     </section>
 
-    <!-- TELA 5: ADMIN PANEL -->
+    <!-- TELA 5: ADMIN -->
     <section id="admin-section" class="view-section">
         <div class="container">
-            <h2>Painel Administrativo</h2>
+            <h2>Admin - Todos os Usuários</h2>
             <div class="card">
-                <p>Visão total de todos os usuários cadastrados.</p>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Tipo</th>
-                            <th>Email</th>
-                            <th>Cidade</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-tbody">
-                        <!-- JS -->
-                    </tbody>
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead><tr style="background:var(--primary); color:white; text-align:left;"><th>Nome</th><th>Tipo</th><th>Email</th><th>Ação</th></tr></thead>
+                    <tbody id="admin-tbody"></tbody>
                 </table>
+                <button class="btn btn-danger" style="margin-top:20px;" id="btn-admin-logout">Sair do Admin</button>
             </div>
         </div>
     </section>
 
-    <!-- MODAL DE DETALHES -->
+    <!-- MODAL DETALHES -->
     <div id="detail-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('detail-modal')">&times;</span>
-            <div id="modal-body-content">
-                <!-- Detalhes injetados -->
-            </div>
+            <span class="close" onclick="document.getElementById('detail-modal').style.display='none'">&times;</span>
+            <div id="modal-body"></div>
         </div>
     </div>
 
-    <!-- MODAL DE CHAT -->
-    <div id="chat-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('chat-modal')">&times;</span>
-            <h3>Chat com <span id="chat-target-name">...</span></h3>
-            <div class="chat-box" id="chat-history">
-                <!-- Mensagens -->
-            </div>
-            <div style="display:flex; gap:10px;">
-                <input type="text" id="chat-input" placeholder="Digite sua mensagem...">
-                <button class="btn btn-primary" onclick="sendMessage()">Enviar</button>
-            </div>
-        </div>
-    </div>
+    <!-- FIREBASE SETUP (Module Type) -->
+    <script type="module">
+        // 1. Importações do Firebase v9 via CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, query, where } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    <script>
-        /* --- 1. DATA & STATE --- */
-        const needsOptions = [
-            "Banho", "Alimentação", "Medicamentos", "Troca de Faldas", 
-            "Cadeirante (Transfere)", "Companhia", "Limpeza leve", "Cozinhar"
-        ];
-
-        // Inicializa Banco de Dados Fake se não existir
-        if (!localStorage.getItem('conn_users')) {
-            const initialData = [
-                { id: 1, type: 'admin', name: 'Administrador', email: 'admin@admin.com', pass: '1234', city: 'Brasília', active: true },
-                { id: 2, type: 'assistido', name: 'Sra. Maria Silva', email: 'maria@email.com', pass: '1234', city: 'São Paulo', district: 'Moema', phone: '1199999999', age: 78, condition: 'Alzheimer', needs: ['Banho', 'Medicamentos'], schedule: 'Integral', active: true, photo: 'https://randomuser.me/api/portraits/women/66.jpg' },
-                { id: 3, type: 'cuidador', name: 'Enf. João Souza', email: 'joao@email.com', pass: '1234', city: 'São Paulo', district: 'Centro', phone: '1198888888', age: 32, formation: 'Técnico de Enfermagem', exp: 5, price: '200/dia', prefs: ['Banho', 'Medicamentos', 'Cadeirante (Transfere)'], active: true, photo: 'https://randomuser.me/api/portraits/men/32.jpg' },
-                { id: 4, type: 'cuidador', name: 'Ana Clara', email: 'ana@email.com', pass: '1234', city: 'Rio de Janeiro', district: 'Copacabana', phone: '2199999999', age: 28, formation: 'Cuidador (Curso Livre)', exp: 2, price: '150/dia', prefs: ['Companhia', 'Limpeza leve'], active: true, photo: 'https://randomuser.me/api/portraits/women/44.jpg' }
-            ];
-            localStorage.setItem('conn_users', JSON.stringify(initialData));
-        }
-
-        // Estado da Aplicação
-        const app = {
-            user: null, // Usuário logado
-            usersData: JSON.parse(localStorage.getItem('conn_users')),
-            
-            save: function() {
-                localStorage.setItem('conn_users', JSON.stringify(this.usersData));
-            },
-
-            // Roteamento Simples
-            router: function(screenName) {
-                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                
-                // Lógica de acesso
-                if (screenName === 'dashboard') {
-                    if (!this.user) return this.router('login');
-                    this.renderDashboard();
-                } else if (screenName === 'admin') {
-                    if (!this.user || this.user.type !== 'admin') return this.router('login');
-                    this.renderAdmin();
-                } else if (screenName === 'home') {
-                    this.user = null; // Logout ao ir pra home
-                    this.updateNav();
-                }
-
-                const target = document.getElementById(screenName + '-section');
-                if(target) target.classList.add('active');
-                this.updateNav();
-            },
-
-            updateNav: function() {
-                const nav = document.getElementById('nav-links');
-                if (this.user) {
-                    let html = `<span>Olá, ${this.user.name}</span>`;
-                    if(this.user.type === 'admin') html += `<button onclick="app.router('admin')">Admin</button>`;
-                    else html += `<button onclick="app.router('dashboard')">Painel</button>`;
-                    
-                    html += `<button onclick="app.router('home')">Sair</button>`;
-                    nav.innerHTML = html;
-                } else {
-                    nav.innerHTML = `<button onclick="showLogin()">Entrar</button>`;
-                }
-            }
+        // 2. Configuração (Fornecida por você)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCd40YOqcJP-kWvsdX9TNxym1Baz-btDIM",
+            authDomain: "cuidador-2b862.firebaseapp.com",
+            projectId: "cuidador-2b862",
+            storageBucket: "cuidador-2b862.firebasestorage.app",
+            messagingSenderId: "253776267698",
+            appId: "1:253776267698:web:f5b8af9d3d64d77e06fcab",
+            measurementId: "G-JJS8HEBS5V"
         };
 
-        /* --- 2. AUTHENTICATION --- */
-        function showLogin() { app.router('login'); }
+        // 3. Inicializar
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Estado Global da Aplicação
+        let currentUser = null; 
+        let currentUserData = null; // Dados do Firestore
+
+        /* --- UI & ROTEAMENTO --- */
+        const needsOptions = ["Banho", "Alimentação", "Medicamentos", "Troca de Fraldas", "Cadeirante", "Companhia", "Limpeza", "Cozinhar"];
         
-        function handleLogin() {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
+        // Expor função router globalmente para os botões HTML funcionarem
+        window.router = function(screen, param) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(screen + '-section');
+            if(target) target.classList.add('active');
+
+            // Setup Específico de Telas
+            if(screen === 'register') setupRegister(param);
+            if(screen === 'home') signOut(auth);
+            if(screen === 'dashboard') loadDashboard();
             
-            const user = app.usersData.find(u => u.email === email && u.pass === pass);
-            
-            if (user) {
-                app.user = user;
-                if (user.type === 'admin') app.router('admin');
-                else app.router('dashboard');
+            updateNav();
+        };
+
+        function loader(show) {
+            document.getElementById('loader').style.display = show ? 'flex' : 'none';
+        }
+
+        function updateNav() {
+            const nav = document.getElementById('nav-links');
+            if(currentUser) {
+                nav.innerHTML = `<span>Olá, ${currentUserData ? currentUserData.name.split(' ')[0] : 'Usuário'}</span>`;
             } else {
-                alert("E-mail ou senha inválidos!");
+                nav.innerHTML = `<button onclick="window.router('login')">Entrar</button>`;
             }
         }
 
-        function showRegister(type) {
-            app.router('register');
-            document.getElementById('reg-type').value = type;
-            document.getElementById('reg-title').innerText = type === 'assistido' ? "Cadastro de Assistido (Família)" : "Cadastro de Cuidador";
+        /* --- AUTHENTICATION LOGIC --- */
+
+        // Monitorar Estado do Usuário (Persistência)
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                // Buscar dados extras no Firestore
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    currentUserData = docSnap.data();
+                    if(currentUserData.type === 'admin') window.router('admin');
+                    else window.router('dashboard');
+                } else {
+                    // Erro: Usuário no Auth mas sem dados no Firestore
+                    console.error("Dados do perfil não encontrados.");
+                    signOut(auth);
+                }
+            } else {
+                currentUser = null;
+                currentUserData = null;
+                // Se estiver em tela protegida, manda pra home
+                if(!document.getElementById('home-section').classList.contains('active') && 
+                   !document.getElementById('register-section').classList.contains('active') &&
+                   !document.getElementById('login-section').classList.contains('active') &&
+                   !document.getElementById('forgot-section').classList.contains('active')) {
+                    window.router('home');
+                }
+            }
+        });
+
+        // Login
+        document.getElementById('btn-login-action').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            if(!email || !pass) return alert("Preencha email e senha");
+
+            loader(true);
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                // O onAuthStateChanged vai redirecionar
+            } catch (error) {
+                alert("Erro ao entrar: " + error.message);
+                loader(false);
+            }
+        });
+
+        // Logout
+        document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
+        document.getElementById('btn-admin-logout').addEventListener('click', () => { signOut(auth); });
+
+        // Recuperar Senha
+        document.getElementById('btn-forgot-action').addEventListener('click', async () => {
+            const email = document.getElementById('forgot-email').value;
+            if(!email) return alert("Digite o email");
             
-            // Toggle fields
+            loader(true);
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("E-mail de redefinição enviado! Verifique sua caixa de entrada.");
+                window.router('login');
+            } catch (error) {
+                alert("Erro: " + error.message);
+            } finally { loader(false); }
+        });
+
+        /* --- CADASTRO (Firestore) --- */
+        function setupRegister(type) {
+            document.getElementById('reg-form').reset();
+            document.getElementById('reg-type').value = type;
+            document.getElementById('reg-title').innerText = type === 'assistido' ? "Cadastro (Família)" : "Cadastro (Cuidador)";
+            
             document.getElementById('fields-assistido').style.display = type === 'assistido' ? 'block' : 'none';
             document.getElementById('fields-cuidador').style.display = type === 'cuidador' ? 'block' : 'none';
 
-            // Preencher checkboxes dinâmicos
             const container = type === 'assistido' ? document.getElementById('needs-checkboxes') : document.getElementById('prefs-checkboxes');
-            container.innerHTML = needsOptions.map(opt => `
-                <div class="checkbox-item">
-                    <input type="checkbox" value="${opt}" name="specs"> ${opt}
-                </div>
-            `).join('');
+            container.innerHTML = needsOptions.map(opt => `<div class="checkbox-item"><input type="checkbox" value="${opt}" name="specs"> ${opt}</div>`).join('');
         }
 
-        function handleRegister(e) {
+        document.getElementById('reg-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            loader(true);
+
             const type = document.getElementById('reg-type').value;
-            
-            // Coleta checkboxes
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            const name = document.getElementById('reg-name').value;
             const specs = Array.from(document.querySelectorAll('input[name="specs"]:checked')).map(cb => cb.value);
-
-            const newUser = {
-                id: Date.now(),
-                type: type,
-                name: document.getElementById('reg-name').value,
-                email: document.getElementById('reg-email').value,
-                pass: document.getElementById('reg-pass').value,
-                phone: document.getElementById('reg-phone').value,
-                city: document.getElementById('reg-city').value,
-                district: document.getElementById('reg-district').value,
-                photo: document.getElementById('reg-photo').value || 'https://via.placeholder.com/150',
-                active: true
-            };
-
-            if (type === 'assistido') {
-                newUser.age = document.getElementById('reg-age-a').value;
-                newUser.condition = document.getElementById('reg-condition').value;
-                newUser.schedule = document.getElementById('reg-schedule-a').value;
-                newUser.needs = specs;
-            } else {
-                newUser.age = document.getElementById('reg-age-c').value;
-                newUser.formation = document.getElementById('reg-formation').value;
-                newUser.exp = document.getElementById('reg-exp').value;
-                newUser.price = document.getElementById('reg-price').value;
-                newUser.prefs = specs;
-            }
-
-            app.usersData.push(newUser);
-            app.save();
-            alert("Cadastro realizado com sucesso! Faça login.");
-            app.router('login');
-        }
-
-        /* --- 3. DASHBOARD & PRIVACY LOGIC --- */
-        app.renderDashboard = function() {
-            const title = document.getElementById('dash-title');
-            const listTitle = document.getElementById('list-title');
             
-            if (app.user.type === 'assistido') {
-                title.innerText = "Família: Buscar Profissionais";
-                listTitle.innerText = "Cuidadores Disponíveis";
-            } else {
-                title.innerText = "Profissional: Oportunidades";
-                listTitle.innerText = "Assistidos buscando ajuda";
-            }
-            
-            // Setup My Profile Edit
-            const statusSelect = document.getElementById('my-status');
-            statusSelect.value = app.user.active.toString();
+            try {
+                // 1. Criar Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const uid = userCredential.user.uid;
 
-            renderList();
-        };
+                // 2. Montar Objeto
+                const userData = {
+                    uid: uid,
+                    type: type,
+                    name: name,
+                    email: email,
+                    phone: document.getElementById('reg-phone').value,
+                    city: document.getElementById('reg-city').value,
+                    district: document.getElementById('reg-district').value,
+                    photo: document.getElementById('reg-photo').value || 'https://via.placeholder.com/150',
+                    active: true, // Disponível por padrão
+                    createdAt: new Date()
+                };
 
-        function renderList() {
-            const grid = document.getElementById('results-grid');
-            const search = document.getElementById('search-input').value.toLowerCase();
-            grid.innerHTML = '';
-
-            // LÓGICA DE PRIVACIDADE PRINCIPAL
-            // Quem vê quem?
-            let targetType = '';
-            if (app.user.type === 'assistido') targetType = 'cuidador'; // Assistido só vê cuidador
-            else if (app.user.type === 'cuidador') targetType = 'assistido'; // Cuidador só vê assistido
-
-            const list = app.usersData.filter(u => 
-                u.type === targetType && // Filtro de tipo
-                u.active === true && // Filtro de disponibilidade
-                (u.name.toLowerCase().includes(search) || u.city.toLowerCase().includes(search)) // Filtro de busca
-            );
-
-            if (list.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">Nenhum resultado encontrado.</p>';
-                return;
-            }
-
-            list.forEach(u => {
-                // Monta os cards
-                let detailsPreview = '';
-                if (u.type === 'assistido') {
-                    detailsPreview = `<p><strong>Condição:</strong> ${u.condition}</p><p><strong>Horário:</strong> ${u.schedule}</p>`;
+                if (type === 'assistido') {
+                    userData.age = document.getElementById('reg-age-a').value;
+                    userData.condition = document.getElementById('reg-condition').value;
+                    userData.schedule = document.getElementById('reg-schedule-a').value;
+                    userData.needs = specs;
                 } else {
-                    detailsPreview = `<p><strong>Formação:</strong> ${u.formation}</p><p><strong>Valor:</strong> ${u.price}</p>`;
+                    userData.age = document.getElementById('reg-age-c').value;
+                    userData.formation = document.getElementById('reg-formation').value;
+                    userData.exp = document.getElementById('reg-exp').value;
+                    userData.price = document.getElementById('reg-price').value;
+                    userData.prefs = specs;
                 }
 
-                const html = `
-                    <div class="profile-card">
-                        <div class="profile-header">
-                            <h3>${u.name}</h3>
-                            <small>${u.city} - ${u.district}</small>
-                        </div>
-                        <div class="profile-body">
-                            <div style="text-align:center; margin-bottom:10px;">
-                                <img src="${u.photo}" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
+                // 3. Salvar no Firestore
+                await setDoc(doc(db, "users", uid), userData);
+                
+                alert("Cadastro realizado com sucesso!");
+                // onAuthStateChanged cuidará do redirecionamento
+            } catch (error) {
+                alert("Erro no cadastro: " + error.message);
+                loader(false);
+            }
+        });
+
+        /* --- DASHBOARD & LISTING --- */
+        async function loadDashboard() {
+            if(!currentUserData) return;
+            loader(true);
+
+            const title = document.getElementById('dash-title');
+            const listTitle = document.getElementById('list-title');
+            const grid = document.getElementById('results-grid');
+            
+            // Lógica de quem vê quem
+            let targetType = currentUserData.type === 'assistido' ? 'cuidador' : 'assistido';
+            
+            title.innerText = currentUserData.type === 'assistido' ? "Família: Encontrar Cuidadores" : "Profissional: Vagas Disponíveis";
+            listTitle.innerText = currentUserData.type === 'assistido' ? "Profissionais Próximos" : "Famílias Buscando Ajuda";
+
+            // Configurar Modal "Meu Perfil"
+            document.getElementById('my-status-select').value = currentUserData.active.toString();
+
+            try {
+                // Busca no Firestore: Usuários do tipo alvo que estão ativos
+                const q = query(collection(db, "users"), where("type", "==", targetType), where("active", "==", true));
+                const querySnapshot = await getDocs(q);
+                
+                grid.innerHTML = '';
+                if(querySnapshot.empty) {
+                    grid.innerHTML = '<p>Nenhum resultado encontrado no momento.</p>';
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const u = doc.data();
+                    
+                    // Filtro Local Simples de Busca (Search Bar)
+                    const term = document.getElementById('search-input').value.toLowerCase();
+                    if(term && !u.name.toLowerCase().includes(term) && !u.city.toLowerCase().includes(term)) return;
+
+                    let details = u.type === 'assistido' 
+                        ? `<p><strong>Condição:</strong> ${u.condition}</p>` 
+                        : `<p><strong>Formação:</strong> ${u.formation}</p><p><strong>Valor:</strong> ${u.price}</p>`;
+
+                    const card = `
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <h3>${u.name}</h3>
+                                <small>${u.city} - ${u.district}</small>
                             </div>
-                            ${detailsPreview}
-                            <p style="margin-top:5px; font-size:0.9rem; color:#666;">${u.type === 'assistido' ? 'Precisa de: ' + u.needs.join(', ') : 'Faz: ' + u.prefs.join(', ')}</p>
+                            <div class="profile-body">
+                                <div style="text-align:center;"><img src="${u.photo}" style="width:80px; height:80px; border-radius:50%; object-fit:cover;"></div>
+                                ${details}
+                            </div>
+                            <div class="profile-footer">
+                                <button class="btn btn-primary" onclick="window.showDetails('${u.uid}')">Ver Contato</button>
+                            </div>
                         </div>
-                        <div class="profile-footer">
-                            <button class="btn btn-primary" onclick="showDetails(${u.id})">Ver Detalhes</button>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += html;
-            });
+                    `;
+                    grid.innerHTML += card;
+                });
+
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao buscar dados.");
+            } finally {
+                loader(false);
+            }
         }
 
-        /* --- 4. DETAILS & CHAT --- */
-        function showDetails(id) {
-            const u = app.usersData.find(user => user.id === id);
-            if(!u) return;
+        // Filtro de Busca (keyup)
+        document.getElementById('search-input').addEventListener('keyup', loadDashboard);
 
-            const modal = document.getElementById('detail-modal');
-            const content = document.getElementById('modal-body-content');
+        /* --- DETALHES & UPDATE STATUS --- */
+        
+        // Expor função showDetails
+        window.showDetails = async function(uid) {
+            loader(true);
+            const docRef = doc(db, "users", uid);
+            const snap = await getDoc(docRef);
+            loader(false);
             
-            let specificInfo = '';
-            if(u.type === 'assistido') {
-                specificInfo = `
-                    <h3>Necessidades</h3>
-                    <p><strong>Condição:</strong> ${u.condition}</p>
-                    <p><strong>Idade:</strong> ${u.age} anos</p>
-                    <p><strong>Horário:</strong> ${u.schedule}</p>
-                    <p><strong>Precisa de ajuda com:</strong> <br> ${u.needs.map(n => `<span class="status-badge status-busy">${n}</span>`).join(' ')}</p>
-                `;
-            } else {
-                specificInfo = `
-                    <h3>Dados Profissionais</h3>
-                    <p><strong>Formação:</strong> ${u.formation}</p>
-                    <p><strong>Experiência:</strong> ${u.exp} anos</p>
-                    <p><strong>Valor/Pretensão:</strong> ${u.price}</p>
-                    <p><strong>Realiza:</strong> <br> ${u.prefs.map(n => `<span class="status-badge status-available">${n}</span>`).join(' ')}</p>
-                `;
-            }
+            if(snap.exists()){
+                const u = snap.data();
+                const modal = document.getElementById('detail-modal');
+                const body = document.getElementById('modal-body');
+                
+                let extra = u.type === 'assistido' 
+                    ? `<p><strong>Necessidades:</strong> ${u.needs.join(', ')}</p><p><strong>Horário:</strong> ${u.schedule}</p>`
+                    : `<p><strong>Habilidades:</strong> ${u.prefs.join(', ')}</p><p><strong>Experiência:</strong> ${u.exp} anos</p>`;
 
-            content.innerHTML = `
-                <div style="display:flex; align-items:center; gap:20px; margin-bottom:20px;">
-                    <img src="${u.photo}" style="width:100px; height:100px; border-radius:50%; object-fit:cover;">
-                    <div>
+                body.innerHTML = `
+                    <div style="text-align:center">
+                        <img src="${u.photo}" style="width:100px; height:100px; border-radius:50%; object-fit:cover;">
                         <h2>${u.name}</h2>
-                        <p><i class="fas fa-map-marker-alt"></i> ${u.city}, ${u.district}</p>
+                        <p class="status-badge status-available">${u.city}</p>
                     </div>
-                </div>
-                <hr style="margin-bottom:15px;">
-                ${specificInfo}
-                <div style="margin-top:30px; display:flex; gap:10px;">
-                    <button class="btn btn-primary" onclick="openChat('${u.name}')">💬 Chat Interno</button>
-                    <a href="https://wa.me/55${u.phone.replace(/\D/g,'')}" target="_blank" class="btn btn-secondary" style="background:#25D366; color:white; text-decoration:none; display:inline-block; padding:10px 20px; border-radius:5px; font-weight:bold;">WhatsApp</a>
-                </div>
-            `;
-
-            modal.style.display = 'block';
-        }
-
-        function openChat(targetName) {
-            document.getElementById('detail-modal').style.display = 'none';
-            document.getElementById('chat-modal').style.display = 'block';
-            document.getElementById('chat-target-name').innerText = targetName;
-            document.getElementById('chat-history').innerHTML = '<p style="text-align:center; color:grey; font-size:0.8rem;">Início da conversa segura.</p>';
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const history = document.getElementById('chat-history');
-            if(input.value.trim() === '') return;
-
-            // Msg Enviada
-            history.innerHTML += `<div class="msg msg-me">${input.value}</div>`;
-            
-            // Resposta Automática Simulada
-            setTimeout(() => {
-                history.innerHTML += `<div class="msg msg-other">Olá! Obrigado pelo contato. Podemos conversar melhor?</div>`;
-                history.scrollTop = history.scrollHeight;
-            }, 1000);
-
-            input.value = '';
-            history.scrollTop = history.scrollHeight;
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        /* --- 5. USER MANAGEMENT --- */
-        function toggleMyProfile() {
-            const area = document.getElementById('my-profile-area');
-            area.style.display = area.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function updateMyStatus() {
-            const newVal = document.getElementById('my-status').value === 'true';
-            app.user.active = newVal;
-            
-            // Atualiza no array principal
-            const idx = app.usersData.findIndex(u => u.id === app.user.id);
-            app.usersData[idx].active = newVal;
-            app.save();
-            alert("Status atualizado!");
-        }
-
-        function deleteAccount() {
-            if(confirm("Tem certeza? Esta ação não pode ser desfeita.")) {
-                const idx = app.usersData.findIndex(u => u.id === app.user.id);
-                app.usersData.splice(idx, 1);
-                app.save();
-                alert("Conta excluída.");
-                app.router('home');
-            }
-        }
-
-        /* --- 6. ADMIN --- */
-        app.renderAdmin = function() {
-            const tbody = document.getElementById('admin-tbody');
-            tbody.innerHTML = '';
-            
-            app.usersData.forEach(u => {
-                if(u.type === 'admin') return;
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${u.name}</td>
-                        <td>${u.type}</td>
-                        <td>${u.email}</td>
-                        <td>${u.city}</td>
-                        <td>
-                            <button onclick="adminDelete(${u.id})" style="color:red; border:none; background:none; cursor:pointer;">Excluir</button>
-                        </td>
-                    </tr>
+                    <hr style="margin:15px 0;">
+                    ${extra}
+                    <br>
+                    <a href="https://wa.me/55${u.phone.replace(/\D/g,'')}" target="_blank" class="btn btn-primary" style="display:block; text-align:center; text-decoration:none;">
+                        <i class="fab fa-whatsapp"></i> Chamar no WhatsApp
+                    </a>
                 `;
-            });
+                modal.style.display = 'block';
+            }
         };
 
-        function adminDelete(id) {
-            if(confirm("Admin: Excluir usuário?")) {
-                const idx = app.usersData.findIndex(u => u.id === id);
-                app.usersData.splice(idx, 1);
-                app.save();
-                app.renderAdmin();
+        // Toggle botão "Meu Perfil"
+        document.getElementById('btn-my-profile').addEventListener('click', () => {
+            const el = document.getElementById('my-profile-area');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Atualizar Status no Firestore
+        document.getElementById('btn-update-status').addEventListener('click', async () => {
+            const newVal = document.getElementById('my-status-select').value === 'true';
+            loader(true);
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), { active: newVal });
+                currentUserData.active = newVal;
+                alert("Status atualizado!");
+                loadDashboard(); // Recarregar para refletir (se necessário)
+            } catch (e) {
+                alert("Erro ao atualizar: " + e.message);
+            } finally {
+                loader(false);
             }
+        });
+
+        /* --- ADMIN SCREEN --- */
+        // Se o email for admin@admin.com (ou type=admin no banco), carrega isso
+        if(window.location.hash === '#admin') window.router('admin');
+
+        async function loadAdmin() {
+            // OBS: Em app real, validar security rules no backend
+            const tBody = document.getElementById('admin-tbody');
+            tBody.innerHTML = 'Carregando...';
+            
+            const q = query(collection(db, "users"));
+            const snaps = await getDocs(q);
+            tBody.innerHTML = '';
+
+            snaps.forEach(d => {
+                const u = d.data();
+                tBody.innerHTML += `<tr><td>${u.name}</td><td>${u.type}</td><td>${u.email}</td><td>-</td></tr>`;
+            });
+        }
+        
+        // Hack para carregar admin no router se for o caso
+        const originalRouter = window.router;
+        window.router = function(screen, param) {
+            originalRouter(screen, param);
+            if(screen === 'admin') loadAdmin();
         }
 
-        // Close modals on outside click
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = "none";
-            }
-        }
-
-        // Init
-        app.updateNav();
     </script>
 </body>
 </html>
