@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexão Cuidado - App Conectado</title>
+    <title>Conexão Cuidado - Login Google</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #e67e22; --light: #ecf0f1; --dark: #2c3e50; --danger: #e74c3c; }
+        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #e67e22; --google: #db4437; --light: #ecf0f1; --dark: #2c3e50; --danger: #e74c3c; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
         
@@ -24,9 +24,11 @@
 
         /* UI Elements */
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative;}
-        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; display: inline-block; text-align: center;}
         .btn-primary { background: var(--secondary); color: white; }
         .btn-primary:hover { background: #219150; }
+        .btn-google { background: white; color: #333; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 10px; }
+        .btn-google:hover { background: #f1f1f1; }
         .btn-outline { border: 2px solid var(--secondary); color: var(--secondary); background: transparent; }
         .btn-danger { background: var(--danger); color: white; }
         input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; }
@@ -102,6 +104,14 @@
         <div class="container" style="max-width: 400px;">
             <div class="card">
                 <h2>Login</h2>
+                
+                <!-- Botão Google -->
+                <button class="btn btn-google" id="btn-google-login">
+                    <i class="fab fa-google"></i> Entrar com Google
+                </button>
+                
+                <div style="text-align:center; margin: 15px 0; color:#888;">ou use seu e-mail</div>
+
                 <input type="email" id="login-email" placeholder="Seu E-mail">
                 <input type="password" id="login-pass" placeholder="Senha">
                 <button class="btn btn-primary" style="width:100%" id="btn-login-action">Entrar</button>
@@ -112,6 +122,18 @@
             </div>
         </div>
     </section>
+
+    <!-- TELA: SELEÇÃO DE PERFIL (GOOGLE NOVO) -->
+    <div id="google-role-modal" class="modal">
+        <div class="modal-content" style="text-align:center;">
+            <h3>Bem-vindo(a)!</h3>
+            <p>Para concluir seu cadastro via Google, selecione seu perfil:</p>
+            <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
+                <button class="btn btn-primary" onclick="setupGoogleFinish('assistido')">💙 Buscar Profissional</button>
+                <button class="btn btn-primary" style="background:var(--accent)" onclick="setupGoogleFinish('cuidador')">👩‍⚕️ Sou Cuidador</button>
+            </div>
+        </div>
+    </div>
 
     <!-- TELA: RECUPERAR SENHA -->
     <section id="forgot-section" class="view-section">
@@ -137,13 +159,17 @@
                     <h3>Dados de Acesso</h3>
                     <input type="text" id="reg-name" placeholder="Nome Completo" required>
                     <input type="email" id="reg-email" placeholder="E-mail" required>
-                    <input type="password" id="reg-pass" placeholder="Senha (Min. 6 caracteres)" required>
+                    <!-- Campo senha visível apenas para cadastro normal -->
+                    <div id="password-container">
+                        <input type="password" id="reg-pass" placeholder="Senha (Min. 6 caracteres)">
+                    </div>
+                    
                     <input type="tel" id="reg-phone" placeholder="WhatsApp (apenas números)" required>
                     <div style="display:flex; gap:10px;">
                         <input type="text" id="reg-city" placeholder="Cidade" required>
                         <input type="text" id="reg-district" placeholder="Bairro" required>
                     </div>
-                    <input type="text" id="reg-photo" placeholder="URL da Foto (Opcional)">
+                    <input type="text" id="reg-photo" placeholder="URL da Foto (ou use a do Google)">
 
                     <!-- Campos Assistido -->
                     <div id="fields-assistido" style="display:none; margin-top:20px;">
@@ -244,12 +270,12 @@
 
     <!-- FIREBASE SETUP (Module Type) -->
     <script type="module">
-        // 1. Importações do Firebase v9 via CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        // Importações do Auth adicionando GoogleAuthProvider e signInWithPopup
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, query, where } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // 2. Configuração (Fornecida por você)
+        // CONFIGURAÇÃO
         const firebaseConfig = {
             apiKey: "AIzaSyCd40YOqcJP-kWvsdX9TNxym1Baz-btDIM",
             authDomain: "cuidador-2b862.firebaseapp.com",
@@ -260,25 +286,23 @@
             measurementId: "G-JJS8HEBS5V"
         };
 
-        // 3. Inicializar
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Estado Global da Aplicação
+        // Estado Global
         let currentUser = null; 
-        let currentUserData = null; // Dados do Firestore
+        let currentUserData = null; 
+        let isGoogleRegistration = false; // Flag para saber se estamos completando cadastro Google
 
         /* --- UI & ROTEAMENTO --- */
         const needsOptions = ["Banho", "Alimentação", "Medicamentos", "Troca de Fraldas", "Cadeirante", "Companhia", "Limpeza", "Cozinhar"];
         
-        // Expor função router globalmente para os botões HTML funcionarem
         window.router = function(screen, param) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(screen + '-section');
             if(target) target.classList.add('active');
 
-            // Setup Específico de Telas
             if(screen === 'register') setupRegister(param);
             if(screen === 'home') signOut(auth);
             if(screen === 'dashboard') loadDashboard();
@@ -292,8 +316,8 @@
 
         function updateNav() {
             const nav = document.getElementById('nav-links');
-            if(currentUser) {
-                nav.innerHTML = `<span>Olá, ${currentUserData ? currentUserData.name.split(' ')[0] : 'Usuário'}</span>`;
+            if(currentUser && currentUserData) {
+                nav.innerHTML = `<span>Olá, ${currentUserData.name.split(' ')[0]}</span>`;
             } else {
                 nav.innerHTML = `<button onclick="window.router('login')">Entrar</button>`;
             }
@@ -301,69 +325,98 @@
 
         /* --- AUTHENTICATION LOGIC --- */
 
-        // Monitorar Estado do Usuário (Persistência)
+        // Monitorar Auth
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // Buscar dados extras no Firestore
+                // Verificar se existe perfil no Firestore
                 const docRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(docRef);
                 
                 if (docSnap.exists()) {
+                    // Usuário completo -> Dashboard
                     currentUserData = docSnap.data();
+                    document.getElementById('google-role-modal').style.display = 'none'; // Fecha modal se estiver aberto
                     if(currentUserData.type === 'admin') window.router('admin');
                     else window.router('dashboard');
                 } else {
-                    // Erro: Usuário no Auth mas sem dados no Firestore
-                    console.error("Dados do perfil não encontrados.");
-                    signOut(auth);
+                    // Usuário no Auth mas sem dados (Novo Google User)
+                    // NÃO fazemos logout. Mostramos modal para escolher perfil
+                    document.getElementById('google-role-modal').style.display = 'block';
+                    // Esconde outras telas
+                    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
                 }
             } else {
                 currentUser = null;
                 currentUserData = null;
-                // Se estiver em tela protegida, manda pra home
-                if(!document.getElementById('home-section').classList.contains('active') && 
-                   !document.getElementById('register-section').classList.contains('active') &&
-                   !document.getElementById('login-section').classList.contains('active') &&
-                   !document.getElementById('forgot-section').classList.contains('active')) {
+                // Se não estiver em tela de login/registro, vai pra home
+                if(!document.querySelector('#login-section.active') && 
+                   !document.querySelector('#register-section.active') && 
+                   !document.querySelector('#forgot-section.active')) {
                     window.router('home');
                 }
             }
         });
 
-        // Login
+        // Login com Email/Senha
         document.getElementById('btn-login-action').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             if(!email || !pass) return alert("Preencha email e senha");
-
             loader(true);
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                // O onAuthStateChanged vai redirecionar
             } catch (error) {
-                alert("Erro ao entrar: " + error.message);
+                alert("Erro: " + error.message);
                 loader(false);
             }
         });
 
+        // --- LOGIN GOOGLE ---
+        document.getElementById('btn-google-login').addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+                // onAuthStateChanged vai lidar com o resto
+            } catch (error) {
+                console.error(error);
+                alert("Erro no login Google: " + error.message);
+            }
+        });
+
+        // Configurar Formulário para Finalizar Google (Chamado pelo Modal)
+        window.setupGoogleFinish = function(type) {
+            document.getElementById('google-role-modal').style.display = 'none';
+            isGoogleRegistration = true;
+            window.router('register', type);
+            
+            // Preencher dados do Google
+            if(currentUser) {
+                document.getElementById('reg-name').value = currentUser.displayName || "";
+                document.getElementById('reg-email').value = currentUser.email || "";
+                document.getElementById('reg-photo').value = currentUser.photoURL || "";
+                
+                // Travar campos que vieram do Google
+                document.getElementById('reg-email').disabled = true;
+                // Ocultar senha
+                document.getElementById('password-container').style.display = 'none';
+            }
+        };
+
         // Logout
-        document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); });
-        document.getElementById('btn-admin-logout').addEventListener('click', () => { signOut(auth); });
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+        document.getElementById('btn-admin-logout').addEventListener('click', () => signOut(auth));
 
         // Recuperar Senha
         document.getElementById('btn-forgot-action').addEventListener('click', async () => {
             const email = document.getElementById('forgot-email').value;
             if(!email) return alert("Digite o email");
-            
             loader(true);
             try {
                 await sendPasswordResetEmail(auth, email);
-                alert("E-mail de redefinição enviado! Verifique sua caixa de entrada.");
+                alert("Link enviado!");
                 window.router('login');
-            } catch (error) {
-                alert("Erro: " + error.message);
-            } finally { loader(false); }
+            } catch (error) { alert("Erro: " + error.message); } finally { loader(false); }
         });
 
         /* --- CADASTRO (Firestore) --- */
@@ -374,6 +427,12 @@
             
             document.getElementById('fields-assistido').style.display = type === 'assistido' ? 'block' : 'none';
             document.getElementById('fields-cuidador').style.display = type === 'cuidador' ? 'block' : 'none';
+
+            // Restaurar visual padrão se não for Google
+            if(!isGoogleRegistration) {
+                document.getElementById('reg-email').disabled = false;
+                document.getElementById('password-container').style.display = 'block';
+            }
 
             const container = type === 'assistido' ? document.getElementById('needs-checkboxes') : document.getElementById('prefs-checkboxes');
             container.innerHTML = needsOptions.map(opt => `<div class="checkbox-item"><input type="checkbox" value="${opt}" name="specs"> ${opt}</div>`).join('');
@@ -390,11 +449,19 @@
             const specs = Array.from(document.querySelectorAll('input[name="specs"]:checked')).map(cb => cb.value);
             
             try {
-                // 1. Criar Auth
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const uid = userCredential.user.uid;
+                let uid;
 
-                // 2. Montar Objeto
+                if (isGoogleRegistration) {
+                    // Usuário já está autenticado pelo Google
+                    uid = currentUser.uid;
+                } else {
+                    // Cadastro Normal: Criar Auth
+                    if(pass.length < 6) throw new Error("Senha deve ter 6+ caracteres");
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                    uid = userCredential.user.uid;
+                }
+
+                // Dados para o Firestore
                 const userData = {
                     uid: uid,
                     type: type,
@@ -404,7 +471,7 @@
                     city: document.getElementById('reg-city').value,
                     district: document.getElementById('reg-district').value,
                     photo: document.getElementById('reg-photo').value || 'https://via.placeholder.com/150',
-                    active: true, // Disponível por padrão
+                    active: true,
                     createdAt: new Date()
                 };
 
@@ -421,49 +488,44 @@
                     userData.prefs = specs;
                 }
 
-                // 3. Salvar no Firestore
+                // Salvar
                 await setDoc(doc(db, "users", uid), userData);
                 
-                alert("Cadastro realizado com sucesso!");
-                // onAuthStateChanged cuidará do redirecionamento
+                alert("Cadastro concluído!");
+                isGoogleRegistration = false; // Reset flag
+                
+                // Forçar atualização do state se for Google (pois auth state não mudou)
+                if(currentUser) {
+                    currentUserData = userData;
+                    window.router('dashboard');
+                }
             } catch (error) {
-                alert("Erro no cadastro: " + error.message);
+                alert("Erro: " + error.message);
                 loader(false);
             }
         });
 
-        /* --- DASHBOARD & LISTING --- */
+        /* --- DASHBOARD --- */
         async function loadDashboard() {
             if(!currentUserData) return;
             loader(true);
-
             const title = document.getElementById('dash-title');
             const listTitle = document.getElementById('list-title');
             const grid = document.getElementById('results-grid');
             
-            // Lógica de quem vê quem
             let targetType = currentUserData.type === 'assistido' ? 'cuidador' : 'assistido';
-            
             title.innerText = currentUserData.type === 'assistido' ? "Família: Encontrar Cuidadores" : "Profissional: Vagas Disponíveis";
             listTitle.innerText = currentUserData.type === 'assistido' ? "Profissionais Próximos" : "Famílias Buscando Ajuda";
-
-            // Configurar Modal "Meu Perfil"
             document.getElementById('my-status-select').value = currentUserData.active.toString();
 
             try {
-                // Busca no Firestore: Usuários do tipo alvo que estão ativos
                 const q = query(collection(db, "users"), where("type", "==", targetType), where("active", "==", true));
                 const querySnapshot = await getDocs(q);
-                
                 grid.innerHTML = '';
-                if(querySnapshot.empty) {
-                    grid.innerHTML = '<p>Nenhum resultado encontrado no momento.</p>';
-                }
+                if(querySnapshot.empty) grid.innerHTML = '<p>Nenhum resultado.</p>';
 
                 querySnapshot.forEach((doc) => {
                     const u = doc.data();
-                    
-                    // Filtro Local Simples de Busca (Search Bar)
                     const term = document.getElementById('search-input').value.toLowerCase();
                     if(term && !u.name.toLowerCase().includes(term) && !u.city.toLowerCase().includes(term)) return;
 
@@ -471,7 +533,7 @@
                         ? `<p><strong>Condição:</strong> ${u.condition}</p>` 
                         : `<p><strong>Formação:</strong> ${u.formation}</p><p><strong>Valor:</strong> ${u.price}</p>`;
 
-                    const card = `
+                    grid.innerHTML += `
                         <div class="profile-card">
                             <div class="profile-header">
                                 <h3>${u.name}</h3>
@@ -486,34 +548,20 @@
                             </div>
                         </div>
                     `;
-                    grid.innerHTML += card;
                 });
-
-            } catch (err) {
-                console.error(err);
-                alert("Erro ao buscar dados.");
-            } finally {
-                loader(false);
-            }
+            } catch (err) { console.error(err); } finally { loader(false); }
         }
 
-        // Filtro de Busca (keyup)
         document.getElementById('search-input').addEventListener('keyup', loadDashboard);
 
-        /* --- DETALHES & UPDATE STATUS --- */
-        
-        // Expor função showDetails
+        /* --- DETALHES --- */
         window.showDetails = async function(uid) {
             loader(true);
-            const docRef = doc(db, "users", uid);
-            const snap = await getDoc(docRef);
+            const snap = await getDoc(doc(db, "users", uid));
             loader(false);
-            
             if(snap.exists()){
                 const u = snap.data();
-                const modal = document.getElementById('detail-modal');
                 const body = document.getElementById('modal-body');
-                
                 let extra = u.type === 'assistido' 
                     ? `<p><strong>Necessidades:</strong> ${u.needs.join(', ')}</p><p><strong>Horário:</strong> ${u.schedule}</p>`
                     : `<p><strong>Habilidades:</strong> ${u.prefs.join(', ')}</p><p><strong>Experiência:</strong> ${u.exp} anos</p>`;
@@ -531,17 +579,15 @@
                         <i class="fab fa-whatsapp"></i> Chamar no WhatsApp
                     </a>
                 `;
-                modal.style.display = 'block';
+                document.getElementById('detail-modal').style.display = 'block';
             }
         };
 
-        // Toggle botão "Meu Perfil"
         document.getElementById('btn-my-profile').addEventListener('click', () => {
             const el = document.getElementById('my-profile-area');
             el.style.display = el.style.display === 'none' ? 'block' : 'none';
         });
 
-        // Atualizar Status no Firestore
         document.getElementById('btn-update-status').addEventListener('click', async () => {
             const newVal = document.getElementById('my-status-select').value === 'true';
             loader(true);
@@ -549,38 +595,26 @@
                 await updateDoc(doc(db, "users", currentUser.uid), { active: newVal });
                 currentUserData.active = newVal;
                 alert("Status atualizado!");
-                loadDashboard(); // Recarregar para refletir (se necessário)
-            } catch (e) {
-                alert("Erro ao atualizar: " + e.message);
-            } finally {
-                loader(false);
-            }
+                loadDashboard();
+            } catch (e) { alert("Erro: " + e.message); } finally { loader(false); }
         });
 
-        /* --- ADMIN SCREEN --- */
-        // Se o email for admin@admin.com (ou type=admin no banco), carrega isso
+        /* --- ADMIN --- */
         if(window.location.hash === '#admin') window.router('admin');
-
-        async function loadAdmin() {
-            // OBS: Em app real, validar security rules no backend
-            const tBody = document.getElementById('admin-tbody');
-            tBody.innerHTML = 'Carregando...';
-            
-            const q = query(collection(db, "users"));
-            const snaps = await getDocs(q);
-            tBody.innerHTML = '';
-
-            snaps.forEach(d => {
-                const u = d.data();
-                tBody.innerHTML += `<tr><td>${u.name}</td><td>${u.type}</td><td>${u.email}</td><td>-</td></tr>`;
-            });
-        }
-        
-        // Hack para carregar admin no router se for o caso
         const originalRouter = window.router;
         window.router = function(screen, param) {
             originalRouter(screen, param);
             if(screen === 'admin') loadAdmin();
+        }
+        async function loadAdmin() {
+            const tBody = document.getElementById('admin-tbody');
+            tBody.innerHTML = 'Carregando...';
+            const snaps = await getDocs(query(collection(db, "users")));
+            tBody.innerHTML = '';
+            snaps.forEach(d => {
+                const u = d.data();
+                tBody.innerHTML += `<tr><td>${u.name}</td><td>${u.type}</td><td>${u.email}</td><td>-</td></tr>`;
+            });
         }
 
     </script>
