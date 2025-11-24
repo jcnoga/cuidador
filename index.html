@@ -8,10 +8,10 @@
     <style>
         :root {
             --primary: #2c3e50;
-            --secondary: #27ae60; /* Verde */
-            --accent: #e67e22;    /* Laranja */
+            --secondary: #27ae60;
+            --accent: #e67e22;
             --light: #f8f9fa;
-            --danger: #e74c3c;
+            --danger: #c0392b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
@@ -21,8 +21,10 @@
         header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         header h1 { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
         
-        /* Botão Sair no Header */
-        .btn-logout-header { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; display: none; }
+        .user-info-header { display: flex; align-items: center; gap: 15px; }
+        .user-name-span { font-weight: 600; font-size: 0.95rem; display: none; } /* Oculto até logar */
+
+        .btn-logout-header { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: none; }
         .btn-logout-header:hover { background: var(--danger); }
 
         /* --- Layout --- */
@@ -40,6 +42,8 @@
         .btn-primary { background: var(--secondary); color: white; }
         .btn-primary:hover { background: #219150; }
         .btn-outline { background: transparent; border: 2px solid var(--secondary); color: var(--secondary); margin-top: 10px; }
+        .btn-danger { background: var(--danger); color: white; margin-top: 10px; }
+        .btn-danger:hover { background: #a93226; }
         
         /* Google Btn */
         .btn-google { background: white; color: #555; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
@@ -56,9 +60,6 @@
         .modal-content { background: white; margin: 10% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; text-align: center; position: relative; }
         .close-btn { position: absolute; right: 15px; top: 10px; font-size: 24px; cursor: pointer; }
 
-        /* --- Links --- */
-        .link-text { color: var(--secondary); cursor: pointer; text-decoration: underline; font-weight: bold; }
-        
         /* Loader */
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
     </style>
@@ -70,7 +71,11 @@
     <!-- HEADER -->
     <header>
         <h1><i class="fas fa-heartbeat"></i> Conexão Cuidado</h1>
-        <div id="user-nav">
+        
+        <div class="user-info-header">
+            <!-- Nome do usuário aparece aqui -->
+            <span id="header-user-name" class="user-name-span"></span>
+            
             <button id="header-logout-btn" class="btn-logout-header" onclick="doLogout()">
                 <i class="fas fa-sign-out-alt"></i> Sair
             </button>
@@ -83,7 +88,6 @@
             <div class="card">
                 <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">Entrar</h2>
 
-                <!-- Botão Google -->
                 <button class="btn btn-google" id="btn-google-login">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> 
                     Entrar com Google
@@ -103,7 +107,6 @@
                     <a onclick="window.router('forgot')" style="color:#666; cursor:pointer;">Esqueci minha senha</a>
                 </div>
 
-                <!-- SEÇÃO "NÃO TEM CONTA?" -->
                 <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; text-align: center;">
                     <p>Não tem conta?</p>
                     <button class="btn btn-outline" onclick="openRoleSelector()">Cadastre-se Aqui</button>
@@ -112,7 +115,7 @@
         </div>
     </section>
 
-    <!-- MODAL DE ESCOLHA DE PERFIL (Cadastro) -->
+    <!-- MODAL DE ESCOLHA DE PERFIL -->
     <div id="role-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="document.getElementById('role-modal').style.display='none'">&times;</span>
@@ -122,11 +125,11 @@
             <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
                 <button class="btn btn-primary" style="background:#3498db;" onclick="goToRegister('assistido')">
                     <i class="fas fa-user-injured fa-2x" style="display:block; margin-bottom:5px;"></i>
-                    Sou Família<br>(Busco Cuidado)
+                    Sou Família
                 </button>
                 <button class="btn btn-primary" style="background:var(--accent);" onclick="goToRegister('cuidador')">
                     <i class="fas fa-user-nurse fa-2x" style="display:block; margin-bottom:5px;"></i>
-                    Sou Profissional<br>(Cuidador)
+                    Sou Profissional
                 </button>
             </div>
         </div>
@@ -144,7 +147,6 @@
                     <input type="text" id="reg-name" placeholder="Nome Completo" required>
                     <input type="tel" id="reg-phone" placeholder="WhatsApp (DDD + Número)" required>
                     
-                    <!-- Email/Senha (Se for cadastro normal) -->
                     <div id="auth-fields-container">
                         <input type="email" id="reg-email" placeholder="E-mail" required>
                         <input type="password" id="reg-pass" placeholder="Senha (Mínimo 6 caracteres)">
@@ -156,7 +158,6 @@
                     </div>
                     <input type="text" id="reg-photo" placeholder="Link da Foto (Opcional)">
 
-                    <!-- CAMPOS ESPECÍFICOS -->
                     <div id="fields-assistido" style="display:none; margin-top:20px; padding-top:10px; border-top:1px solid #eee;">
                         <h4 style="color:var(--primary)">Dados do Assistido</h4>
                         <input type="number" id="reg-age-a" placeholder="Idade">
@@ -207,23 +208,36 @@
                     <h2 id="dash-title" style="margin:0; color:var(--primary)">Painel</h2>
                     <p id="dash-subtitle" style="color:#666; font-size:0.9rem;">Bem-vindo ao sistema</p>
                 </div>
-                <!-- Filtro -->
                 <input type="text" id="search-input" placeholder="Buscar por nome ou cidade..." style="max-width:300px;">
             </div>
 
-            <!-- Botão Meu Perfil (Toggle) -->
             <button onclick="toggleMyProfile()" style="background:none; border:none; color:var(--secondary); cursor:pointer; margin-bottom:15px; text-decoration:underline;">
-                <i class="fas fa-cog"></i> Configurar meu status (Visibilidade)
+                <i class="fas fa-cog"></i> Configurar meu perfil / Excluir conta
             </button>
 
+            <!-- Área de Edição e Exclusão -->
             <div id="my-profile-area" class="card" style="display:none; border:1px solid var(--secondary);">
-                <h4>Meu Status</h4>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <select id="my-status-select" style="max-width:200px;">
-                        <option value="true">Visível (Buscando)</option>
-                        <option value="false">Oculto (Indisponível)</option>
-                    </select>
-                    <button class="btn btn-primary" onclick="updateStatus()" style="width:auto;">Salvar</button>
+                <h4>Configurações da Conta</h4>
+                
+                <div style="margin-bottom: 20px;">
+                    <label>Visibilidade:</label>
+                    <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
+                        <select id="my-status-select" style="max-width:200px;">
+                            <option value="true">Visível (Buscando)</option>
+                            <option value="false">Oculto (Indisponível)</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="updateStatus()" style="width:auto;">Salvar Status</button>
+                    </div>
+                </div>
+
+                <hr style="border-color:#eee; margin: 15px 0;">
+                
+                <!-- BOTÃO DE EXCLUSÃO -->
+                <div>
+                    <p style="font-size:0.9rem; color:#666;">Zona de Perigo:</p>
+                    <button class="btn btn-danger" onclick="deleteAccount()" style="width:auto;">
+                        <i class="fas fa-trash"></i> Excluir minha conta permanentemente
+                    </button>
                 </div>
             </div>
 
@@ -265,9 +279,10 @@
 
     <!-- JAVASCRIPT / FIREBASE -->
     <script type="module">
+        // Adicionei deleteUser e deleteDoc nas importações
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, collection, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // Configuração
         const firebaseConfig = {
@@ -296,12 +311,16 @@
             const target = document.getElementById(screen + '-section');
             if(target) target.classList.add('active');
             
-            // Botão sair
+            // Controle de elementos do header
             const btnLogout = document.getElementById('header-logout-btn');
+            const userName = document.getElementById('header-user-name');
+            
             if (screen === 'dashboard' || screen === 'admin') {
                 btnLogout.style.display = 'block';
+                userName.style.display = 'block';
             } else {
                 btnLogout.style.display = 'none';
+                userName.style.display = 'none';
             }
 
             if(screen === 'dashboard') loadDashboard();
@@ -327,12 +346,13 @@
             signOut(auth).then(() => {
                 currentUser = null;
                 currentUserData = null;
+                document.getElementById('header-user-name').innerText = ""; // Limpa nome
                 window.router('login');
                 alert("Você saiu do sistema.");
             });
         };
 
-        // --- AUTH ---
+        // --- AUTH & STATE ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -341,15 +361,18 @@
                     if(snap.exists()) {
                         currentUserData = snap.data();
                         
-                        // Fecha modal se estiver aberto
+                        // Atualiza Nome no Cabeçalho
+                        const firstName = currentUserData.name.split(' ')[0];
+                        document.getElementById('header-user-name').innerText = `Olá, ${firstName}`;
+                        
                         document.getElementById('role-modal').style.display = 'none';
 
                         if(currentUserData.type === 'admin') window.router('admin');
                         else window.router('dashboard');
                     } else {
-                        // Novo usuário Google sem cadastro
+                        // Google User Novo
                         document.getElementById('role-modal').style.display = 'block';
-                        window.router('login'); // Mantém no fundo
+                        window.router('login'); 
                     }
                 } catch(e) { console.error(e); }
             } else {
@@ -394,7 +417,6 @@
             document.getElementById('fields-assistido').style.display = (type === 'assistido') ? 'block' : 'none';
             document.getElementById('fields-cuidador').style.display = (type === 'cuidador') ? 'block' : 'none';
 
-            // Se for Google, preenche e trava email
             if(currentUser && !currentUserData) {
                 isGoogleRegister = true;
                 document.getElementById('reg-name').value = currentUser.displayName || "";
@@ -451,7 +473,7 @@
 
                 await setDoc(doc(db, "users", uid), data);
                 alert("Cadastrado com sucesso!");
-                window.location.reload(); // Recarrega para limpar estados
+                window.location.reload(); 
 
             } catch(e) {
                 alert("Erro: " + e.message);
@@ -488,8 +510,6 @@
 
                 snap.forEach(d => {
                     const u = d.data();
-                    
-                    // Filtro JS simples
                     const term = document.getElementById('search-input').value.toLowerCase();
                     if(term && !u.name.toLowerCase().includes(term) && !u.city.toLowerCase().includes(term)) return;
 
@@ -518,7 +538,7 @@
 
         document.getElementById('search-input').addEventListener('keyup', loadDashboard);
 
-        // --- STATUS UPDATE ---
+        // --- STATUS UPDATE & EXCLUSÃO ---
         window.updateStatus = async () => {
             const val = document.getElementById('my-status-select').value === 'true';
             try {
@@ -527,6 +547,26 @@
                 alert("Status atualizado!");
                 loadDashboard();
             } catch(e) { alert("Erro"); }
+        }
+
+        window.deleteAccount = async () => {
+            if(!confirm("TEM CERTEZA? Essa ação apagará todos os seus dados e não poderá ser desfeita.")) return;
+            window.loader(true);
+            try {
+                // 1. Apaga do Banco
+                await deleteDoc(doc(db, "users", currentUser.uid));
+                // 2. Apaga do Auth
+                await deleteUser(currentUser);
+                alert("Sua conta foi excluída com sucesso.");
+                window.location.reload();
+            } catch(e) {
+                // Se der erro de "requires recent login", pedir para logar novamente
+                if(e.code === 'auth/requires-recent-login') {
+                    alert("Por segurança, saia e entre novamente na conta para poder excluí-la.");
+                } else {
+                    alert("Erro ao excluir: " + e.message);
+                }
+            } finally { window.loader(false); }
         }
 
         // --- DETALHES ---
