@@ -3,346 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexão Cuidado - App Completo</title>
+    <title>Conexão Cuidado</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary: #2c3e50;
-            --secondary: #27ae60;
-            --accent: #e67e22;
+            --secondary: #27ae60; /* Verde */
+            --accent: #e67e22;    /* Laranja */
             --light: #f8f9fa;
-            --dark: #343a40;
-            --danger: #dc3545;
-            --google-btn: #ffffff;
+            --danger: #e74c3c;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        body { background-color: #e9ecef; color: #333; line-height: 1.6; padding-bottom: 50px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #e9ecef; color: #333; padding-bottom: 50px; }
 
         /* --- Header --- */
-        header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        header h1 { font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-        nav { display: flex; gap: 15px; align-items: center; }
-        nav button { background: none; border: 1px solid transparent; color: rgba(255,255,255,0.9); cursor: pointer; font-size: 0.95rem; padding: 5px 10px; border-radius: 4px; transition: 0.2s; }
-        nav button:hover { background: rgba(255,255,255,0.1); color: white; }
-        nav button.active-nav { background: rgba(255,255,255,0.2); font-weight: bold; }
+        header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        header h1 { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+        
+        /* Botão Sair no Header */
+        .btn-logout-header { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; display: none; }
+        .btn-logout-header:hover { background: var(--danger); }
 
-        /* --- Container & Layout --- */
+        /* --- Layout --- */
         .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-        .view-section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .view-section { display: none; animation: fadeIn 0.4s; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Cards & Forms --- */
+        /* --- Cards & Inputs --- */
         .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ced4da; border-radius: 6px; }
         
-        h2 { color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid var(--secondary); display: inline-block; padding-bottom: 5px; }
-        h3 { color: var(--dark); margin: 20px 0 10px; font-size: 1.1rem; }
-
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ced4da; border-radius: 6px; font-size: 1rem; transition: 0.3s; }
-        input:focus, select:focus { border-color: var(--secondary); outline: none; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1); }
-
         /* --- Buttons --- */
-        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.2s; display: inline-block; text-align: center; }
-        .btn-block { width: 100%; }
+        .btn { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
         .btn-primary { background: var(--secondary); color: white; }
-        .btn-primary:hover { background: #219150; transform: translateY(-1px); }
-        .btn-outline { border: 2px solid var(--secondary); color: var(--secondary); background: transparent; }
-        .btn-outline:hover { background: var(--secondary); color: white; }
-        .btn-danger { background: var(--danger); color: white; font-size: 0.9rem; padding: 8px 16px; }
-        .btn-danger:hover { background: #c82333; }
+        .btn-primary:hover { background: #219150; }
+        .btn-outline { background: transparent; border: 2px solid var(--secondary); color: var(--secondary); margin-top: 10px; }
+        
+        /* Google Btn */
+        .btn-google { background: white; color: #555; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .btn-google:hover { background: #f1f1f1; }
 
-        /* Google Button */
-        .btn-google { background: white; color: #555; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-bottom: 15px; position: relative; }
-        .btn-google img { width: 20px; }
-        .btn-google:hover { background-color: #f8f9fa; border-color: #ccc; }
-
-        /* --- Checkboxes Grid --- */
-        .checkbox-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 15px 0; }
-        .checkbox-item { display: flex; align-items: center; gap: 8px; background: #f8f9fa; padding: 8px; border-radius: 5px; border: 1px solid #e9ecef; }
-        .checkbox-item input { width: auto; margin: 0; cursor: pointer; }
-
-        /* --- Profiles Grid --- */
-        .profiles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .profile-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: transform 0.2s; display: flex; flex-direction: column; }
-        .profile-card:hover { transform: translateY(-5px); }
-        .profile-header { background: linear-gradient(135deg, var(--primary), #34495e); color: white; padding: 20px; text-align: center; }
-        .profile-body { padding: 20px; flex-grow: 1; color: #555; font-size: 0.95rem; }
-        .profile-footer { padding: 15px; border-top: 1px solid #eee; text-align: center; background: #f8f9fa; }
-
-        .tag { display: inline-block; padding: 4px 10px; border-radius: 15px; font-size: 0.8rem; margin: 2px; font-weight: bold; }
-        .tag-green { background: #d4edda; color: #155724; }
-        .tag-blue { background: #d1ecf1; color: #0c5460; }
+        /* --- Grid Perfis --- */
+        .profiles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .profile-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .profile-header { background: var(--primary); color: white; padding: 15px; text-align: center; }
+        .profile-body { padding: 15px; }
 
         /* --- Modal --- */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(2px); }
-        .modal-content { background-color: white; margin: 5% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideDown 0.3s; }
-        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #aaa; }
-        .close-btn:hover { color: var(--dark); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+        .modal-content { background: white; margin: 10% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; text-align: center; position: relative; }
+        .close-btn { position: absolute; right: 15px; top: 10px; font-size: 24px; cursor: pointer; }
 
-        /* --- Hero Section --- */
-        .hero { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 0 0 30px 30px; margin-bottom: 40px; }
-        .hero h2 { border: none; color: white; font-size: 2.2rem; }
-        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
-        .hero-btn { padding: 18px 35px; font-size: 1.1rem; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .hero-btn.white { background: white; color: var(--primary); }
-        .hero-btn.accent { background: var(--accent); color: white; }
-
-        /* --- Loader --- */
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; color: var(--secondary); font-size: 1.5rem; }
+        /* --- Links --- */
+        .link-text { color: var(--secondary); cursor: pointer; text-decoration: underline; font-weight: bold; }
         
-        /* Links utilitarios */
-        .auth-links { margin-top: 15px; text-align: center; font-size: 0.9rem; }
-        .auth-links a { color: var(--primary); text-decoration: none; margin: 0 8px; cursor: pointer; }
-        .auth-links a:hover { text-decoration: underline; }
+        /* Loader */
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
     </style>
 </head>
 <body>
 
-    <!-- Loader -->
-    <div id="loader">
-        <i class="fas fa-circle-notch fa-spin fa-2x"></i>
-        <p style="margin-top:15px; font-size:1rem; color:#666;">Carregando...</p>
-    </div>
+    <div id="loader"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--secondary)"></i></div>
 
-    <!-- Header -->
+    <!-- HEADER -->
     <header>
         <h1><i class="fas fa-heartbeat"></i> Conexão Cuidado</h1>
-        <nav id="nav-links">
-            <!-- Injetado via JS -->
-        </nav>
+        <div id="user-nav">
+            <button id="header-logout-btn" class="btn-logout-header" onclick="doLogout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
     </header>
 
-    <!-- 1. HOME -->
-    <section id="home-section" class="view-section active">
-        <div class="hero">
-            <h2>Cuidado e carinho ao seu alcance</h2>
-            <p>Conectamos famílias a cuidadores qualificados de forma simples e segura.</p>
-            <div class="hero-buttons">
-                <button onclick="window.router('register', 'assistido')" class="hero-btn white"><i class="fas fa-search"></i> Buscar Profissional</button>
-                <button onclick="window.router('register', 'cuidador')" class="hero-btn accent"><i class="fas fa-user-nurse"></i> Sou Cuidador</button>
-            </div>
-        </div>
-        <div class="container" style="text-align:center;">
-            <h3>Já possui uma conta?</h3>
-            <button class="btn btn-outline" onclick="window.router('login')">Acessar Sistema</button>
-        </div>
-    </section>
-
-    <!-- 2. LOGIN -->
-    <section id="login-section" class="view-section">
-        <div class="container" style="max-width: 450px;">
+    <!-- 1. TELA DE LOGIN -->
+    <section id="login-section" class="view-section active">
+        <div class="container" style="max-width: 400px;">
             <div class="card">
-                <h2 style="width:100%; text-align:center; border:none;">Bem-vindo de volta</h2>
-                
+                <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">Entrar</h2>
+
+                <!-- Botão Google -->
                 <button class="btn btn-google" id="btn-google-login">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> 
                     Entrar com Google
                 </button>
-                
-                <div style="display:flex; align-items:center; margin: 20px 0; color:#888;">
-                    <hr style="flex:1; border-color:#eee;"> <span style="padding:0 10px; font-size:0.8rem;">OU</span> <hr style="flex:1; border-color:#eee;">
+
+                <div style="display:flex; align-items:center; margin: 15px 0; color:#999; font-size:0.8rem;">
+                    <hr style="flex:1;"> <span style="padding:0 10px;">OU E-MAIL</span> <hr style="flex:1;">
                 </div>
 
                 <form id="login-form">
-                    <input type="email" id="login-email" placeholder="Seu E-mail" required>
-                    <input type="password" id="login-pass" placeholder="Sua Senha" required>
-                    <button type="submit" class="btn btn-primary btn-block" style="margin-top:10px;">Entrar</button>
+                    <input type="email" id="login-email" placeholder="E-mail" required>
+                    <input type="password" id="login-pass" placeholder="Senha" required>
+                    <button type="submit" class="btn btn-primary">Acessar</button>
                 </form>
 
-                <div class="auth-links">
-                    <a onclick="window.router('forgot')">Esqueci a senha</a> • 
-                    <a onclick="window.router('home')">Voltar ao início</a>
+                <div style="text-align:center; margin-top: 20px; font-size: 0.9rem;">
+                    <a onclick="window.router('forgot')" style="color:#666; cursor:pointer;">Esqueci minha senha</a>
+                </div>
+
+                <!-- SEÇÃO "NÃO TEM CONTA?" -->
+                <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; text-align: center;">
+                    <p>Não tem conta?</p>
+                    <button class="btn btn-outline" onclick="openRoleSelector()">Cadastre-se Aqui</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- MODAL: Escolha de Perfil (Para Login Google Novo) -->
-    <div id="google-role-modal" class="modal">
-        <div class="modal-content" style="text-align:center; max-width:500px;">
-            <h3 style="margin-top:0;">Finalizar Cadastro</h3>
-            <p>Olá! Detectamos que é seu primeiro acesso.</p>
-            <p><strong>Como você deseja utilizar a plataforma?</strong></p>
-            <div style="display:flex; gap:15px; justify-content:center; margin-top:25px;">
-                <button class="btn btn-primary" onclick="window.setupGoogleFinish('assistido')">
-                    <i class="fas fa-wheelchair"></i> Família / Assistido
+    <!-- MODAL DE ESCOLHA DE PERFIL (Cadastro) -->
+    <div id="role-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('role-modal').style.display='none'">&times;</span>
+            <h3 style="color:var(--primary)">Como você deseja se cadastrar?</h3>
+            <p style="margin:15px 0; color:#666;">Escolha o perfil que melhor se adapta a você:</p>
+            
+            <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+                <button class="btn btn-primary" style="background:#3498db;" onclick="goToRegister('assistido')">
+                    <i class="fas fa-user-injured fa-2x" style="display:block; margin-bottom:5px;"></i>
+                    Sou Família<br>(Busco Cuidado)
                 </button>
-                <button class="btn btn-primary" style="background:var(--accent)" onclick="window.setupGoogleFinish('cuidador')">
-                    <i class="fas fa-user-nurse"></i> Sou Profissional
+                <button class="btn btn-primary" style="background:var(--accent);" onclick="goToRegister('cuidador')">
+                    <i class="fas fa-user-nurse fa-2x" style="display:block; margin-bottom:5px;"></i>
+                    Sou Profissional<br>(Cuidador)
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 3. RECUPERAR SENHA -->
-    <section id="forgot-section" class="view-section">
-        <div class="container" style="max-width: 450px;">
-            <div class="card">
-                <h2>Recuperação</h2>
-                <p style="font-size:0.9rem; color:#666;">Digite seu e-mail para receber o link de redefinição.</p>
-                <input type="email" id="forgot-email" placeholder="E-mail cadastrado">
-                <button class="btn btn-primary btn-block" id="btn-forgot-action" style="margin-top:10px;">Enviar E-mail</button>
-                <div class="auth-links"><a onclick="window.router('login')">Cancelar</a></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. CADASTRO -->
+    <!-- 2. TELA DE CADASTRO -->
     <section id="register-section" class="view-section">
-        <div class="container" style="max-width: 800px;">
+        <div class="container" style="max-width: 600px;">
             <div class="card">
-                <h2 id="reg-title">Criar Conta</h2>
+                <h2 id="reg-title" style="color:var(--primary); margin-bottom:15px;">Cadastro</h2>
                 <form id="reg-form">
                     <input type="hidden" id="reg-type">
                     
-                    <h3>1. Dados de Acesso</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <input type="text" id="reg-name" placeholder="Nome Completo" required>
-                        <input type="tel" id="reg-phone" placeholder="WhatsApp (DDD + Número)" required>
-                    </div>
+                    <label>Dados Pessoais</label>
+                    <input type="text" id="reg-name" placeholder="Nome Completo" required>
+                    <input type="tel" id="reg-phone" placeholder="WhatsApp (DDD + Número)" required>
                     
-                    <!-- Container Senha/Email (Escondido se for Google) -->
+                    <!-- Email/Senha (Se for cadastro normal) -->
                     <div id="auth-fields-container">
                         <input type="email" id="reg-email" placeholder="E-mail" required>
-                        <input type="password" id="reg-pass" placeholder="Crie uma senha (mín. 6 dígitos)">
+                        <input type="password" id="reg-pass" placeholder="Senha (Mínimo 6 caracteres)">
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                    <div style="display:flex; gap:10px;">
                         <input type="text" id="reg-city" placeholder="Cidade" required>
                         <input type="text" id="reg-district" placeholder="Bairro" required>
                     </div>
-                    <input type="text" id="reg-photo" placeholder="Link da Foto de Perfil (Opcional)">
+                    <input type="text" id="reg-photo" placeholder="Link da Foto (Opcional)">
 
-                    <!-- Campos Específicos: ASSISTIDO -->
-                    <div id="fields-assistido" style="display:none; border-top: 1px solid #eee; margin-top: 20px;">
-                        <h3>2. Perfil do Assistido</h3>
-                        <div style="display:flex; gap:15px;">
-                            <input type="number" id="reg-age-a" placeholder="Idade" style="width:100px;">
-                            <select id="reg-condition">
-                                <option value="" disabled selected>Condição Principal</option>
-                                <option value="Idoso">Idoso (Sem deficiência grave)</option>
-                                <option value="PcD Física">PcD Física</option>
-                                <option value="PcD Intelectual">PcD Intelectual</option>
-                                <option value="Alzheimer">Alzheimer / Demência</option>
-                                <option value="Acamado">Acamado</option>
-                                <option value="Pós-Cirúrgico">Pós-Cirúrgico</option>
-                            </select>
-                        </div>
-                        
-                        <p style="margin-top:15px; font-weight:bold;">Necessidades:</p>
-                        <div class="checkbox-group" id="needs-checkboxes"></div>
-                        
-                        <p style="margin-top:15px; font-weight:bold;">Horário Desejado:</p>
+                    <!-- CAMPOS ESPECÍFICOS -->
+                    <div id="fields-assistido" style="display:none; margin-top:20px; padding-top:10px; border-top:1px solid #eee;">
+                        <h4 style="color:var(--primary)">Dados do Assistido</h4>
+                        <input type="number" id="reg-age-a" placeholder="Idade">
+                        <select id="reg-condition">
+                            <option value="" disabled selected>Condição Principal</option>
+                            <option value="Idoso">Idoso</option>
+                            <option value="Alzheimer">Alzheimer</option>
+                            <option value="Acamado">Acamado</option>
+                            <option value="PcD Física">PcD Física</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                        <label>Horário:</label>
                         <select id="reg-schedule-a">
-                            <option value="Integral">Integral (Diurno)</option>
+                            <option value="Integral">Integral</option>
                             <option value="Meio Período">Meio Período</option>
-                            <option value="Plantão 12x36">Plantão 12x36</option>
-                            <option value="Noturno">Noturno</option>
+                            <option value="Plantão">Plantão 12x36</option>
                             <option value="Finais de Semana">Finais de Semana</option>
-                            <option value="Residente">Interno (Dorme no local)</option>
                         </select>
                     </div>
 
-                    <!-- Campos Específicos: CUIDADOR -->
-                    <div id="fields-cuidador" style="display:none; border-top: 1px solid #eee; margin-top: 20px;">
-                        <h3>2. Perfil Profissional</h3>
-                        <div style="display:flex; gap:15px;">
-                            <input type="number" id="reg-age-c" placeholder="Idade" style="width:100px;">
-                            <select id="reg-formation">
-                                <option value="" disabled selected>Formação Principal</option>
-                                <option value="Cuidador">Cuidador (Curso Livre)</option>
-                                <option value="Téc. Enfermagem">Técnico de Enfermagem</option>
-                                <option value="Enfermeiro">Enfermeiro(a)</option>
-                                <option value="Experiência">Experiência Familiar (Sem curso)</option>
-                            </select>
-                        </div>
-                        
-                        <div style="display:flex; gap:15px;">
-                            <input type="number" id="reg-exp" placeholder="Anos de Exp.">
-                            <input type="text" id="reg-price" placeholder="Pretensão (ex: R$ 150/dia)">
-                        </div>
-
-                        <p style="margin-top:15px; font-weight:bold;">Tenho experiência com:</p>
-                        <div class="checkbox-group" id="prefs-checkboxes"></div>
+                    <div id="fields-cuidador" style="display:none; margin-top:20px; padding-top:10px; border-top:1px solid #eee;">
+                        <h4 style="color:var(--accent)">Dados Profissionais</h4>
+                        <input type="number" id="reg-age-c" placeholder="Idade">
+                        <select id="reg-formation">
+                            <option value="Cuidador">Cuidador (Curso)</option>
+                            <option value="Téc. Enfermagem">Técnico de Enfermagem</option>
+                            <option value="Enfermeiro">Enfermeiro(a)</option>
+                            <option value="Experiência">Experiência Familiar</option>
+                        </select>
+                        <input type="number" id="reg-exp" placeholder="Anos de Experiência">
+                        <input type="text" id="reg-price" placeholder="Valor (ex: R$ 150/dia)">
                     </div>
 
-                    <div style="margin-top:30px; display:flex; gap:10px;">
-                        <button type="submit" class="btn btn-primary" style="flex:2;">Salvar Cadastro</button>
-                        <button type="button" class="btn btn-outline" style="flex:1;" onclick="window.router('home')">Cancelar</button>
+                    <div style="margin-top:20px;">
+                        <button type="submit" class="btn btn-primary">Finalizar Cadastro</button>
+                        <button type="button" class="btn btn-outline" style="border:none;" onclick="window.router('login')">Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- 5. DASHBOARD -->
+    <!-- 3. DASHBOARD (PAINEL) -->
     <section id="dashboard-section" class="view-section">
         <div class="container">
-            <!-- Barra de Controle -->
-            <div class="card" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:15px;">
+            <div class="card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
                 <div>
-                    <h2 id="dash-title" style="border:none; margin:0;">Painel</h2>
-                    <p style="font-size:0.9rem; color:#666;" id="dash-subtitle">Encontre o perfil ideal</p>
+                    <h2 id="dash-title" style="margin:0; color:var(--primary)">Painel</h2>
+                    <p id="dash-subtitle" style="color:#666; font-size:0.9rem;">Bem-vindo ao sistema</p>
                 </div>
-                
-                <div style="display:flex; gap:10px; flex-grow: 1; justify-content: flex-end;">
-                    <input type="text" id="search-input" placeholder="Filtrar por nome ou cidade..." style="max-width:300px; margin:0;">
-                    <button class="btn btn-primary" id="btn-my-profile" title="Meu Perfil"><i class="fas fa-user-cog"></i></button>
-                    <button class="btn btn-danger" id="btn-logout" title="Sair"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
+                <!-- Filtro -->
+                <input type="text" id="search-input" placeholder="Buscar por nome ou cidade..." style="max-width:300px;">
             </div>
 
-            <!-- Área de Edição (Toggle) -->
-            <div id="my-profile-area" class="card" style="display:none; border:2px solid var(--secondary); background:#fdfdfd;">
-                <h3><i class="fas fa-sliders-h"></i> Configurar Visibilidade</h3>
-                <p>Se você já encontrou o que procurava, marque como "Oculto" para não receber mais contatos.</p>
-                
-                <div style="display:flex; align-items:center; gap:15px; margin-top:15px;">
-                    <select id="my-status-select" style="max-width:250px; margin:0;">
-                        <option value="true">🟢 Visível (Estou Buscando)</option>
-                        <option value="false">🔴 Oculto (Indisponível)</option>
+            <!-- Botão Meu Perfil (Toggle) -->
+            <button onclick="toggleMyProfile()" style="background:none; border:none; color:var(--secondary); cursor:pointer; margin-bottom:15px; text-decoration:underline;">
+                <i class="fas fa-cog"></i> Configurar meu status (Visibilidade)
+            </button>
+
+            <div id="my-profile-area" class="card" style="display:none; border:1px solid var(--secondary);">
+                <h4>Meu Status</h4>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <select id="my-status-select" style="max-width:200px;">
+                        <option value="true">Visível (Buscando)</option>
+                        <option value="false">Oculto (Indisponível)</option>
                     </select>
-                    <button class="btn btn-primary" id="btn-update-status">Salvar Status</button>
+                    <button class="btn btn-primary" onclick="updateStatus()" style="width:auto;">Salvar</button>
                 </div>
             </div>
 
-            <!-- Grid de Resultados -->
-            <h3 id="list-title">Resultados na sua rede</h3>
             <div id="results-grid" class="profiles-grid">
-                <!-- JS preenche -->
+                <!-- JS PREENCHE -->
             </div>
-            <p id="no-results" style="display:none; text-align:center; margin-top:30px; color:#777;">Nenhum perfil encontrado com os critérios atuais.</p>
         </div>
     </section>
 
-    <!-- 6. ADMIN PANEL -->
+    <!-- 4. RECUPERAR SENHA -->
+    <section id="forgot-section" class="view-section">
+        <div class="container" style="max-width:400px">
+            <div class="card">
+                <h3>Recuperar Senha</h3>
+                <input type="email" id="forgot-email" placeholder="Seu E-mail cadastrado">
+                <button class="btn btn-primary" onclick="recoverPass()">Enviar E-mail</button>
+                <button class="btn btn-outline" onclick="window.router('login')" style="border:none;">Voltar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. ADMIN -->
     <section id="admin-section" class="view-section">
         <div class="container">
+            <h2>Administração</h2>
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2>Painel Administrativo</h2>
-                    <button class="btn btn-danger" id="btn-admin-logout">Sair</button>
-                </div>
-                <p>Lista total de usuários cadastrados no sistema.</p>
-                <div style="overflow-x:auto; margin-top:20px;">
-                    <table style="width:100%; border-collapse:collapse; min-width:600px;">
-                        <thead style="background:var(--primary); color:white;">
-                            <tr>
-                                <th style="padding:10px; text-align:left;">Nome</th>
-                                <th style="padding:10px; text-align:left;">Tipo</th>
-                                <th style="padding:10px; text-align:left;">Email</th>
-                                <th style="padding:10px; text-align:left;">Cidade</th>
-                                <th style="padding:10px; text-align:center;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-tbody">
-                            <!-- JS preenche -->
-                        </tbody>
-                    </table>
-                </div>
+                <div id="admin-content">Carregando...</div>
             </div>
         </div>
     </section>
@@ -357,12 +265,11 @@
 
     <!-- JAVASCRIPT / FIREBASE -->
     <script type="module">
-        // Importando Firebase v10
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // === CONFIGURAÇÃO FIREBASE ===
+        // Configuração
         const firebaseConfig = {
             apiKey: "AIzaSyCd40YOqcJP-kWvsdX9TNxym1Baz-btDIM",
             authDomain: "cuidador-2b862.firebaseapp.com",
@@ -373,492 +280,306 @@
             measurementId: "G-JJS8HEBS5V"
         };
 
-        // Inicializar
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- ESTADO GLOBAL ---
         let currentUser = null;
         let currentUserData = null;
-        let isGoogleRegistration = false;
+        let isGoogleRegister = false;
 
-        const needsList = ["Banho", "Alimentação", "Medicamentos", "Troca de Fraldas", "Cadeirante", "Companhia", "Limpeza Leve", "Cozinhar", "Curativos"];
-
-        // --- FUNÇÕES UTILITÁRIAS (Disponibilizando no window) ---
+        // --- GLOBAL FUNCTIONS ---
+        window.loader = (show) => document.getElementById('loader').style.display = show ? 'flex' : 'none';
         
-        // Loader
-        function loader(show) {
-            document.getElementById('loader').style.display = show ? 'flex' : 'none';
-        }
-
-        // Router
-        window.router = function(screen, param) {
-            // Esconder todas as seções
+        window.router = (screen) => {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            
-            // Mostrar alvo
             const target = document.getElementById(screen + '-section');
             if(target) target.classList.add('active');
-
-            // Lógica específica por tela
-            if(screen === 'register') setupRegister(param);
-            if(screen === 'home') {
-                 // Se foi pra home, limpa a sessão visual, mas o signOut real é no botão
-                 updateNav();
-            }
-            if(screen === 'dashboard') loadDashboard();
             
-            // Fechar modais ao navegar
-            document.getElementById('google-role-modal').style.display = 'none';
+            // Botão sair
+            const btnLogout = document.getElementById('header-logout-btn');
+            if (screen === 'dashboard' || screen === 'admin') {
+                btnLogout.style.display = 'block';
+            } else {
+                btnLogout.style.display = 'none';
+            }
+
+            if(screen === 'dashboard') loadDashboard();
+            if(screen === 'admin') loadAdmin();
         };
 
-        // Atualizar Navegação
-        function updateNav() {
-            const nav = document.getElementById('nav-links');
-            if(currentUser && currentUserData) {
-                const firstName = currentUserData.name.split(' ')[0];
-                nav.innerHTML = `
-                    <button onclick="window.router('dashboard')" class="active-nav">Painel</button>
-                    <span style="font-size:0.9rem; margin-left:10px;">Olá, ${firstName}</span>
-                `;
-            } else {
-                nav.innerHTML = `<button onclick="window.router('login')">Entrar</button>`;
-            }
+        window.openRoleSelector = () => {
+            document.getElementById('role-modal').style.display = 'block';
+        };
+
+        window.goToRegister = (type) => {
+            document.getElementById('role-modal').style.display = 'none';
+            window.router('register');
+            setupRegister(type);
+        };
+
+        window.toggleMyProfile = () => {
+            const el = document.getElementById('my-profile-area');
+            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
         }
 
-        // --- AUTHENTICATION (OBSERVER) ---
+        window.doLogout = () => {
+            signOut(auth).then(() => {
+                currentUser = null;
+                currentUserData = null;
+                window.router('login');
+                alert("Você saiu do sistema.");
+            });
+        };
+
+        // --- AUTH ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // Buscar dados no Firestore
                 try {
-                    const docRef = doc(db, "users", user.uid);
-                    const docSnap = await getDoc(docRef);
-                    
-                    if (docSnap.exists()) {
-                        // Usuário JÁ cadastrado
-                        currentUserData = docSnap.data();
-                        updateNav();
+                    const snap = await getDoc(doc(db, "users", user.uid));
+                    if(snap.exists()) {
+                        currentUserData = snap.data();
+                        
+                        // Fecha modal se estiver aberto
+                        document.getElementById('role-modal').style.display = 'none';
 
-                        // Se estiver no modal de google role, esconde
-                        document.getElementById('google-role-modal').style.display = 'none';
-
-                        // Redirecionamento inteligente
-                        const currentHash = document.querySelector('.view-section.active').id;
-                        if(currentHash === 'login-section' || currentHash === 'register-section' || currentHash === 'home-section') {
-                            if(currentUserData.type === 'admin') window.router('admin');
-                            else window.router('dashboard');
-                        }
+                        if(currentUserData.type === 'admin') window.router('admin');
+                        else window.router('dashboard');
                     } else {
-                        // Usuário logado no Auth, mas SEM perfil no Firestore (Novo Google User)
-                        // Mostra modal de escolha
-                        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                        document.getElementById('google-role-modal').style.display = 'block';
+                        // Novo usuário Google sem cadastro
+                        document.getElementById('role-modal').style.display = 'block';
+                        window.router('login'); // Mantém no fundo
                     }
-                } catch (e) {
-                    console.error("Erro ao buscar perfil", e);
-                }
+                } catch(e) { console.error(e); }
             } else {
-                // Deslogado
-                currentUser = null;
-                currentUserData = null;
-                updateNav();
-                const safeScreens = ['home-section', 'login-section', 'register-section', 'forgot-section'];
-                const currentScreen = document.querySelector('.view-section.active');
-                
-                if (currentScreen && !safeScreens.includes(currentScreen.id)) {
-                    window.router('home');
-                }
+                window.router('login');
             }
         });
 
-        // --- LOGIN E-MAIL ---
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        // LOGIN EMAIL
+        document.getElementById('login-form').addEventListener('submit', async(e)=>{
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
-            
-            loader(true);
+            window.loader(true);
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                // onAuthStateChanged cuida do resto
-            } catch (error) {
-                alert("Erro ao entrar: " + parseAuthError(error.code));
-                loader(false);
+            } catch(e) {
+                alert("Erro: " + e.message);
+                window.loader(false);
             }
         });
 
-        // --- LOGIN GOOGLE ---
-        document.getElementById('btn-google-login').addEventListener('click', async () => {
+        // LOGIN GOOGLE
+        document.getElementById('btn-google-login').addEventListener('click', async()=>{
             const provider = new GoogleAuthProvider();
             try {
                 await signInWithPopup(auth, provider);
-            } catch (error) {
-                console.error(error);
-                if(error.code === 'auth/unauthorized-domain') {
-                    alert("ERRO DE DOMÍNIO: Adicione 'localhost' ou seu domínio do GitHub no Firebase Console > Authentication > Configurações > Domínios Autorizados.");
+            } catch(e) {
+                if(e.code === 'auth/unauthorized-domain') {
+                    alert("Erro de Domínio: O Google ainda não reconheceu seu site. Aguarde 30 min ou use Login com Email/Senha por enquanto.");
                 } else {
-                    alert("Erro Login Google: " + error.message);
+                    alert("Erro Google: " + e.message);
                 }
             }
         });
 
-        // --- PREPARAR CADASTRO PÓS-GOOGLE ---
-        window.setupGoogleFinish = function(type) {
-            document.getElementById('google-role-modal').style.display = 'none';
-            isGoogleRegistration = true;
-            window.router('register', type);
+        // --- CADASTRO ---
+        function setupRegister(type) {
+            document.getElementById('reg-form').reset();
+            document.getElementById('reg-type').value = type;
+            document.getElementById('reg-title').innerText = type === 'assistido' ? "Cadastro Família" : "Cadastro Cuidador";
             
-            // Preencher o que temos
-            if(currentUser) {
+            document.getElementById('fields-assistido').style.display = (type === 'assistido') ? 'block' : 'none';
+            document.getElementById('fields-cuidador').style.display = (type === 'cuidador') ? 'block' : 'none';
+
+            // Se for Google, preenche e trava email
+            if(currentUser && !currentUserData) {
+                isGoogleRegister = true;
                 document.getElementById('reg-name').value = currentUser.displayName || "";
                 document.getElementById('reg-email').value = currentUser.email || "";
                 document.getElementById('reg-photo').value = currentUser.photoURL || "";
                 
-                // Travar campos Auth
                 document.getElementById('reg-email').disabled = true;
                 document.getElementById('auth-fields-container').style.display = 'none';
-            }
-        };
-
-        // --- LOGOUT ---
-        const doLogout = () => {
-            signOut(auth).then(() => {
-                window.router('home');
-                alert("Você saiu do sistema.");
-            });
-        };
-        document.getElementById('btn-logout').onclick = doLogout;
-        document.getElementById('btn-admin-logout').onclick = doLogout;
-
-        // --- RECUPERAR SENHA ---
-        document.getElementById('btn-forgot-action').onclick = async () => {
-            const email = document.getElementById('forgot-email').value;
-            if(!email) return alert("Digite o e-mail.");
-            loader(true);
-            try {
-                await sendPasswordResetEmail(auth, email);
-                alert("Link enviado! Verifique sua caixa de entrada (e spam).");
-                window.router('login');
-            } catch (e) { alert("Erro: " + e.message); }
-            finally { loader(false); }
-        };
-
-        // --- CADASTRO LÓGICA ---
-        function setupRegister(type) {
-            document.getElementById('reg-form').reset();
-            document.getElementById('reg-type').value = type;
-            
-            const titleMap = { 'assistido': 'Família: Buscar Cuidador', 'cuidador': 'Profissional: Oferecer Serviços' };
-            document.getElementById('reg-title').innerText = titleMap[type];
-
-            // Toggle Visual
-            document.getElementById('fields-assistido').style.display = (type === 'assistido') ? 'block' : 'none';
-            document.getElementById('fields-cuidador').style.display = (type === 'cuidador') ? 'block' : 'none';
-
-            // Resetar visual se não for Google
-            if(!isGoogleRegistration) {
+            } else {
+                isGoogleRegister = false;
                 document.getElementById('reg-email').disabled = false;
                 document.getElementById('auth-fields-container').style.display = 'block';
             }
-
-            // Checkboxes
-            const container = (type === 'assistido') ? document.getElementById('needs-checkboxes') : document.getElementById('prefs-checkboxes');
-            container.innerHTML = needsList.map(opt => `
-                <div class="checkbox-item">
-                    <input type="checkbox" value="${opt}" name="specs"> <span>${opt}</span>
-                </div>
-            `).join('');
         }
 
-        document.getElementById('reg-form').addEventListener('submit', async (e) => {
+        document.getElementById('reg-form').addEventListener('submit', async(e)=>{
             e.preventDefault();
-            loader(true);
-
+            window.loader(true);
+            
             const type = document.getElementById('reg-type').value;
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
             const name = document.getElementById('reg-name').value;
-            const specs = Array.from(document.querySelectorAll('input[name="specs"]:checked')).map(cb => cb.value);
-            
+
             try {
                 let uid;
-
-                if (isGoogleRegistration) {
+                if(isGoogleRegister) {
                     uid = currentUser.uid;
                 } else {
-                    if(pass.length < 6) throw new Error("A senha deve ter pelo menos 6 caracteres.");
+                    if(pass.length < 6) throw new Error("Senha muito curta.");
                     const cred = await createUserWithEmailAndPassword(auth, email, pass);
                     uid = cred.user.uid;
                 }
 
-                // Objeto Base
-                const userData = {
-                    uid: uid,
-                    type: type,
-                    name: name,
-                    email: email,
+                const data = {
+                    uid: uid, type: type, name: name, email: email,
                     phone: document.getElementById('reg-phone').value,
                     city: document.getElementById('reg-city').value,
                     district: document.getElementById('reg-district').value,
                     photo: document.getElementById('reg-photo').value || 'https://via.placeholder.com/150',
-                    active: true,
-                    createdAt: new Date()
+                    active: true, createdAt: new Date()
                 };
 
-                // Dados Específicos
-                if (type === 'assistido') {
-                    userData.age = document.getElementById('reg-age-a').value;
-                    userData.condition = document.getElementById('reg-condition').value;
-                    userData.schedule = document.getElementById('reg-schedule-a').value;
-                    userData.needs = specs;
+                if(type === 'assistido') {
+                    data.age = document.getElementById('reg-age-a').value;
+                    data.condition = document.getElementById('reg-condition').value;
+                    data.schedule = document.getElementById('reg-schedule-a').value;
                 } else {
-                    userData.age = document.getElementById('reg-age-c').value;
-                    userData.formation = document.getElementById('reg-formation').value;
-                    userData.exp = document.getElementById('reg-exp').value;
-                    userData.price = document.getElementById('reg-price').value;
-                    userData.prefs = specs;
+                    data.age = document.getElementById('reg-age-c').value;
+                    data.formation = document.getElementById('reg-formation').value;
+                    data.exp = document.getElementById('reg-exp').value;
+                    data.price = document.getElementById('reg-price').value;
                 }
 
-                // Salvar no Firestore
-                await setDoc(doc(db, "users", uid), userData);
-                
-                alert("Cadastro realizado com sucesso!");
-                isGoogleRegistration = false;
-                
-                // Atualizar estado local
-                if(auth.currentUser) {
-                    currentUserData = userData;
-                    window.router('dashboard');
-                } else {
-                    window.router('login');
-                }
+                await setDoc(doc(db, "users", uid), data);
+                alert("Cadastrado com sucesso!");
+                window.location.reload(); // Recarrega para limpar estados
 
-            } catch (error) {
-                alert("Erro no cadastro: " + error.message);
-            } finally {
-                loader(false);
+            } catch(e) {
+                alert("Erro: " + e.message);
+                window.loader(false);
             }
         });
 
         // --- DASHBOARD ---
         async function loadDashboard() {
             if(!currentUserData) return;
-            loader(true);
-            
+            const grid = document.getElementById('results-grid');
             const title = document.getElementById('dash-title');
             const sub = document.getElementById('dash-subtitle');
-            const listTitle = document.getElementById('list-title');
-            const grid = document.getElementById('results-grid');
-            const noRes = document.getElementById('no-results');
 
-            // Lógica Cruzada: Família vê Cuidador, Cuidador vê Família
             let targetType = (currentUserData.type === 'assistido') ? 'cuidador' : 'assistido';
             
             if(currentUserData.type === 'assistido') {
-                title.innerText = "Painel da Família";
-                sub.innerText = "Busque profissionais qualificados.";
-                listTitle.innerText = "Cuidadores Disponíveis";
+                title.innerText = "Encontrar Cuidadores";
+                sub.innerText = "Profissionais disponíveis na sua região";
             } else {
-                title.innerText = "Painel do Profissional";
-                sub.innerText = "Gerencie sua disponibilidade e veja oportunidades.";
-                listTitle.innerText = "Famílias Buscando Ajuda";
+                title.innerText = "Vagas Disponíveis";
+                sub.innerText = "Famílias precisando de ajuda";
             }
 
-            // Setar status atual no select
             document.getElementById('my-status-select').value = currentUserData.active.toString();
+            window.loader(true);
 
             try {
-                // QUERY SEGURA: Só busca users ATIVOS do tipo ALVO.
-                // Isso combina com a regra de segurança: allow read if active == true ...
-                const q = query(
-                    collection(db, "users"), 
-                    where("type", "==", targetType), 
-                    where("active", "==", true)
-                );
-                
+                const q = query(collection(db, "users"), where("type", "==", targetType), where("active", "==", true));
                 const snap = await getDocs(q);
+                
                 grid.innerHTML = '';
-                
-                if(snap.empty) {
-                    noRes.style.display = 'block';
-                } else {
-                    noRes.style.display = 'none';
-                    snap.forEach((d) => {
-                        const u = d.data();
-                        
-                        // Filtro Local (Nome/Cidade)
-                        const term = document.getElementById('search-input').value.toLowerCase();
-                        if(term && !u.name.toLowerCase().includes(term) && !u.city.toLowerCase().includes(term)) return;
+                if(snap.empty) grid.innerHTML = '<p>Nenhum resultado encontrado.</p>';
 
-                        // Card HTML
-                        let badge = '';
-                        let details = '';
-                        
-                        if(u.type === 'assistido') {
-                            badge = '<span class="tag tag-blue">Família</span>';
-                            details = `<p><strong>Condição:</strong> ${u.condition}</p><p><strong>Regime:</strong> ${u.schedule}</p>`;
-                        } else {
-                            badge = '<span class="tag tag-green">Profissional</span>';
-                            details = `<p><strong>Formação:</strong> ${u.formation}</p><p><strong>Valor:</strong> ${u.price}</p>`;
-                        }
-
-                        grid.innerHTML += `
-                            <div class="profile-card">
-                                <div class="profile-header">
-                                    <img src="${u.photo}" style="width:70px; height:70px; border-radius:50%; border:3px solid rgba(255,255,255,0.5); object-fit:cover; margin-bottom:10px;">
-                                    <h3 style="margin:0; color:white; font-size:1.1rem;">${u.name}</h3>
-                                    <small style="opacity:0.9;">${u.city}, ${u.district}</small>
-                                </div>
-                                <div class="profile-body">
-                                    ${details}
-                                    <div style="margin-top:10px;">
-                                        ${u.type === 'assistido' ? u.needs.slice(0,3).map(n=>`<span class="tag tag-blue" style="font-size:0.7rem">${n}</span>`).join('') : u.prefs.slice(0,3).map(n=>`<span class="tag tag-green" style="font-size:0.7rem">${n}</span>`).join('')}
-                                        ${(u.type==='assistido'?u.needs.length:u.prefs.length) > 3 ? '<span class="tag" style="font-size:0.7rem">...</span>' : ''}
-                                    </div>
-                                </div>
-                                <div class="profile-footer">
-                                    <button class="btn btn-primary btn-block" onclick="window.showDetails('${u.uid}')">Ver Detalhes</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-
-            } catch (err) {
-                console.error("Erro Dashboard:", err);
-                // Se der erro de permissão, é provável que as regras do Firestore não estejam batendo com a query
-                if(err.code === 'permission-denied') {
-                    alert("Erro de permissão. Verifique as regras no Firebase Console.");
-                }
-            } finally {
-                loader(false);
-            }
-        }
-
-        // Filtro em tempo real
-        document.getElementById('search-input').addEventListener('keyup', loadDashboard);
-
-        // --- DETALHES ---
-        window.showDetails = async function(uid) {
-            loader(true);
-            try {
-                const docRef = doc(db, "users", uid);
-                const snap = await getDoc(docRef);
-                
-                if(snap.exists()){
-                    const u = snap.data();
-                    const body = document.getElementById('modal-body');
-                    
-                    let extraInfo = '';
-                    if(u.type === 'assistido') {
-                        extraInfo = `
-                            <h4>Necessidades de Cuidado</h4>
-                            <div class="checkbox-group" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
-                                ${u.needs.map(n => `<span class="tag tag-blue">${n}</span>`).join('')}
-                            </div>
-                            <p style="margin-top:10px;"><strong>Horário:</strong> ${u.schedule}</p>
-                            <p><strong>Idade do Assistido:</strong> ${u.age || '-'} anos</p>
-                            <p><strong>Condição:</strong> ${u.condition}</p>
-                        `;
-                    } else {
-                        extraInfo = `
-                            <h4>Qualificações</h4>
-                            <p><strong>Formação:</strong> ${u.formation}</p>
-                            <p><strong>Experiência:</strong> ${u.exp} anos</p>
-                            <p><strong>Pretensão:</strong> ${u.price}</p>
-                            <div class="checkbox-group" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
-                                ${u.prefs.map(n => `<span class="tag tag-green">${n}</span>`).join('')}
-                            </div>
-                        `;
-                    }
-
-                    const wppLink = `https://wa.me/55${u.phone.replace(/\D/g,'')}`;
-
-                    body.innerHTML = `
-                        <div style="text-align:center; padding-bottom:15px; border-bottom:1px solid #eee;">
-                            <img src="${u.photo}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
-                            <h2 style="border:none; margin:10px 0 5px;">${u.name}</h2>
-                            <p style="color:#666;"><i class="fas fa-map-marker-alt"></i> ${u.city} - ${u.district}</p>
-                        </div>
-                        <div style="padding:15px 0;">
-                            ${extraInfo}
-                        </div>
-                        <div style="text-align:center; margin-top:20px;">
-                            <a href="${wppLink}" target="_blank" class="btn btn-primary btn-block" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px;">
-                                <i class="fab fa-whatsapp fa-lg"></i> Entrar em Contato
-                            </a>
-                        </div>
-                    `;
-                    document.getElementById('detail-modal').style.display = 'block';
-                }
-            } catch (e) { console.error(e); }
-            finally { loader(false); }
-        };
-
-        // --- ATUALIZAR STATUS ---
-        document.getElementById('btn-my-profile').addEventListener('click', () => {
-            const el = document.getElementById('my-profile-area');
-            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
-        });
-
-        document.getElementById('btn-update-status').addEventListener('click', async () => {
-            const newVal = document.getElementById('my-status-select').value === 'true';
-            loader(true);
-            try {
-                await updateDoc(doc(db, "users", currentUser.uid), { active: newVal });
-                currentUserData.active = newVal;
-                alert("Visibilidade atualizada com sucesso!");
-                loadDashboard(); // Recarrega para ver efeito
-            } catch (e) { alert("Erro: " + e.message); } 
-            finally { loader(false); }
-        });
-
-        // --- ADMIN PANEL ---
-        if(window.location.hash === '#admin') window.router('admin');
-        const _originalRouter = window.router;
-        window.router = function(screen, param) {
-            _originalRouter(screen, param);
-            if(screen === 'admin') loadAdmin();
-        }
-
-        async function loadAdmin() {
-            if(!currentUserData || currentUserData.type !== 'admin') return;
-            const tBody = document.getElementById('admin-tbody');
-            tBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Carregando...</td></tr>';
-            
-            try {
-                const snap = await getDocs(collection(db, "users"));
-                tBody.innerHTML = '';
                 snap.forEach(d => {
                     const u = d.data();
-                    tBody.innerHTML += `
-                        <tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:10px;">${u.name}</td>
-                            <td style="padding:10px;">${u.type}</td>
-                            <td style="padding:10px;">${u.email}</td>
-                            <td style="padding:10px;">${u.city}</td>
-                            <td style="padding:10px; text-align:center;">
-                                ${u.active ? '<span class="tag tag-green">Ativo</span>' : '<span class="tag" style="background:#eee; color:#999;">Oculto</span>'}
-                            </td>
-                        </tr>
+                    
+                    // Filtro JS simples
+                    const term = document.getElementById('search-input').value.toLowerCase();
+                    if(term && !u.name.toLowerCase().includes(term) && !u.city.toLowerCase().includes(term)) return;
+
+                    let info = u.type === 'assistido' 
+                        ? `${u.condition} • ${u.schedule}` 
+                        : `${u.formation} • ${u.price}`;
+
+                    grid.innerHTML += `
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <img src="${u.photo}" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid white;">
+                                <h3>${u.name}</h3>
+                                <small>${u.city} - ${u.district}</small>
+                            </div>
+                            <div class="profile-body">
+                                <p style="text-align:center; font-weight:bold; color:var(--secondary)">${info}</p>
+                                <button class="btn btn-primary" onclick="showDetails('${u.uid}')" style="margin-top:10px;">Ver Contato</button>
+                            </div>
+                        </div>
                     `;
                 });
-            } catch (e) { tBody.innerHTML = `<tr><td colspan="5">Erro: ${e.message}</td></tr>`; }
+
+            } catch(e) { console.error(e); }
+            finally { window.loader(false); }
         }
 
-        // Helper Erros
-        function parseAuthError(code) {
-            switch(code) {
-                case 'auth/wrong-password': return 'Senha incorreta.';
-                case 'auth/user-not-found': return 'Usuário não encontrado.';
-                case 'auth/email-already-in-use': return 'E-mail já cadastrado.';
-                case 'auth/invalid-email': return 'E-mail inválido.';
-                case 'auth/weak-password': return 'A senha deve ser mais forte.';
-                default: return code;
-            }
+        document.getElementById('search-input').addEventListener('keyup', loadDashboard);
+
+        // --- STATUS UPDATE ---
+        window.updateStatus = async () => {
+            const val = document.getElementById('my-status-select').value === 'true';
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), { active: val });
+                currentUserData.active = val;
+                alert("Status atualizado!");
+                loadDashboard();
+            } catch(e) { alert("Erro"); }
         }
+
+        // --- DETALHES ---
+        window.showDetails = async (uid) => {
+            window.loader(true);
+            const snap = await getDoc(doc(db, "users", uid));
+            window.loader(false);
+            if(snap.exists()) {
+                const u = snap.data();
+                const body = document.getElementById('modal-body');
+                let extra = u.type === 'assistido' 
+                    ? `<p><strong>Condição:</strong> ${u.condition}</p><p><strong>Horário:</strong> ${u.schedule}</p>`
+                    : `<p><strong>Formação:</strong> ${u.formation}</p><p><strong>Exp:</strong> ${u.exp} anos</p><p><strong>Valor:</strong> ${u.price}</p>`;
+
+                body.innerHTML = `
+                    <div style="text-align:center">
+                        <img src="${u.photo}" style="width:100px; height:100px; border-radius:50%; object-fit:cover;">
+                        <h2>${u.name}</h2>
+                        <p>${u.city}</p>
+                        <hr style="margin:10px 0;">
+                        ${extra}
+                        <br>
+                        <a href="https://wa.me/55${u.phone.replace(/\D/g,'')}" target="_blank" class="btn btn-primary" style="text-decoration:none; display:block;">Chamar no WhatsApp</a>
+                    </div>
+                `;
+                document.getElementById('detail-modal').style.display = 'block';
+            }
+        };
+
+        // --- RECOVER PASS ---
+        window.recoverPass = async () => {
+            const email = document.getElementById('forgot-email').value;
+            if(!email) return alert("Digite o email");
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Email enviado!");
+                window.router('login');
+            } catch(e) { alert("Erro: " + e.message); }
+        }
+
+        // --- ADMIN ---
+        async function loadAdmin() {
+            const div = document.getElementById('admin-content');
+            const snap = await getDocs(collection(db, "users"));
+            let html = '<table style="width:100%"><tr><th>Nome</th><th>Tipo</th><th>Email</th></tr>';
+            snap.forEach(d => {
+                const u = d.data();
+                html += `<tr><td>${u.name}</td><td>${u.type}</td><td>${u.email}</td></tr>`;
+            });
+            html += '</table>';
+            div.innerHTML = html;
+        }
+
     </script>
 </body>
 </html>
